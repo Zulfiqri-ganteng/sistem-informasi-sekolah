@@ -20,14 +20,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-
-          # Folder tujuan upload harus diakhiri /
           server-dir: ${{ secrets.FTP_PATH }}/
-
-          # Upload semua file project → termasuk public
           local-dir: "./"
-
-          # Aman, tidak hapus semua file
-          dangerous-clean-slate: false
-
           state-name: ".ftp-deploy-sync.json"
+          dangerous-clean-slate: false
