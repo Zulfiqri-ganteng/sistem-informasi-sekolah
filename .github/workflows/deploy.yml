@@ -6,26 +6,52 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
-    name: Deploy via FTP
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: FTP Deploy
+      ###############################################
+      # 1) DEPLOY CORE PROJECT (app, vendor, system)
+      ###############################################
+      - name: Upload CI4 Core Files to Root Project Folder
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Folder tujuan SERVER
+          # Folder tujuan utama project
+          server-dir: /sistem-informasi-akademik/
+
+          # Upload semua kecuali public (karena beda tujuan)
+          local-dir: "./"
+          exclude: |
+            public/**
+            .github/**
+            tests/**
+            README.md
+
+          # Jangan hapus isi server-dir
+          dangerous-clean-slate: false
+
+      ###############################################
+      # 2) DEPLOY FOLDER PUBLIC KE DOMAIN WEBSITE
+      ###############################################
+      - name: Upload PUBLIC Folder to Domain
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+
+          # Folder domain (ROOT WEB)
           server-dir: /public_html/sekolah-galajuara.zulfiqri.com/
 
-          # Folder lokal proyek CI4
-          local-dir: "./"
+          # Upload hanya isi public/
+          local-dir: "./public/"
 
-          # Jangan hapus folder root
+          # Jangan hapus domain web
           dangerous-clean-slate: false
