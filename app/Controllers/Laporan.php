@@ -116,7 +116,7 @@ class Laporan extends BaseController
         $data = [
             'laporan' => $this->laporanModel->getLaporan(),
             'tanggal' => date('d-m-Y H:i'),
-            'sekolah' => 'SMK Galajuara'
+            'sekolah' => 'Sistem Informasi Sekolah'
         ];
 
         $html = view('laporan/pdf', $data);

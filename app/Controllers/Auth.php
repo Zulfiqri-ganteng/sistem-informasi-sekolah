@@ -151,7 +151,7 @@ class Auth extends BaseController
         return view('auth/register_siswa', [
             'kelas'   => $this->kelasModel->findAll(),
             'jurusan' => $this->jurusanModel->findAll(),
-            'title'   => 'Registrasi Siswa | SMK Galajuara'
+            'title'   => 'Registrasi Siswa | Sistem Informasi Sekolah'
         ]);
     }
 

@@ -725,7 +725,7 @@ if ($total >= 2) {
         </main>
 
         <footer>
-            © <?= date('Y') ?> Zulfiqri,S.Kom — Sistem Tabungan Siswa
+            © <?= date('Y') ?> Zulfiqri,S.Kom — Sistem Informasi Sekolah
         </footer>
     </div>
 
