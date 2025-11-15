@@ -14,19 +14,19 @@ jobs:
         uses: actions/checkout@v3
 
       ###############################################
-      # 1) DEPLOY CORE PROJECT (app, vendor, system)
+      # 1) UPLOAD CI4 CORE (app, system, vendor, writable)
       ###############################################
-      - name: Upload CI4 Core Files to Root Project Folder
+      - name: Upload CI4 Core to Server Root
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Folder tujuan utama project
+          # Folder project benar (di luar public_html)
           server-dir: /sistem-informasi-akademik/
 
-          # Upload semua kecuali public (karena beda tujuan)
+          # Upload semua kecuali PUBLIC folder
           local-dir: "./"
           exclude: |
             public/**
@@ -34,24 +34,22 @@ jobs:
             tests/**
             README.md
 
-          # Jangan hapus isi server-dir
           dangerous-clean-slate: false
 
       ###############################################
-      # 2) DEPLOY FOLDER PUBLIC KE DOMAIN WEBSITE
+      # 2) UPLOAD PUBLIC ke FOLDER DOMAIN
       ###############################################
-      - name: Upload PUBLIC Folder to Domain
+      - name: Upload Public Folder to Domain Root
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Folder domain (ROOT WEB)
+          # TARGET FOLDER DOMAIN (BENAR)
           server-dir: /public_html/sekolah-galajuara.zulfiqri.com/
 
-          # Upload hanya isi public/
+          # Upload hanya folder public
           local-dir: "./public/"
 
-          # Jangan hapus domain web
           dangerous-clean-slate: false
