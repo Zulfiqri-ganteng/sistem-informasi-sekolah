@@ -226,7 +226,7 @@
             </form>
 
             <div class="mt-3 text-center text-register">
-                Belum punya akun lu? <a href="<?= smart_url('register-siswa') ?>">Daftar Disini....!!</a>
+                Belum punya akun? <a href="<?= smart_url('register-siswa') ?>">Daftar Disini....!!</a>
             </div>
 
             <footer>© <?= date('Y') ?> Sistem Informai </footer>
