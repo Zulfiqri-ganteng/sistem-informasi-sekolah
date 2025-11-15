@@ -21,14 +21,13 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Folder tujuan di server (CPanel)
+          # Folder tujuan upload harus diakhiri /
           server-dir: ${{ secrets.FTP_PATH }}/
 
-          # Folder yang diupload dari GitHub → hanya folder public/
-          local-dir: public
+          # Upload semua file project → termasuk public
+          local-dir: "./"
 
-          # File internal sync
-          state-name: .ftp-deploy-sync.json
-
-          # Jangan hapus file server setiap deploy
+          # Aman, tidak hapus semua file
           dangerous-clean-slate: false
+
+          state-name: ".ftp-deploy-sync.json"
