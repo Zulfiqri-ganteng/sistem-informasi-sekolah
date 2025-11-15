@@ -195,7 +195,7 @@
         <div class="login-wrapper text-center">
             <div class="login-header">
                 <img src="<?= smart_url('assets/logo.png') ?>" alt="Logo Sekolah">
-                <h4>Akutansi Keuangan</h4>
+                <h4>Sistem Informasi Akademik</h4>
                 <p>Kota Bekasi</p>
             </div>
 
@@ -229,7 +229,7 @@
                 Belum punya akun? <a href="<?= smart_url('register-siswa') ?>">Daftar sebagai siswa</a>
             </div>
 
-            <footer>© <?= date('Y') ?> SMK Galajuara</footer>
+            <footer>© <?= date('Y') ?> Sistem Informai Akademik </footer>
         </div>
     </div>
 
