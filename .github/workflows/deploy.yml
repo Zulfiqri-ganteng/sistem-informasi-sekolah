@@ -20,6 +20,12 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}/
+
+          # Folder tujuan SERVER
+          server-dir: /public_html/sekolah-galajuara.zulfiqri.com/
+
+          # Folder lokal proyek CI4
           local-dir: "./"
+
+          # Jangan hapus folder root
           dangerous-clean-slate: false

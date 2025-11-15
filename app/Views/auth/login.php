@@ -229,7 +229,7 @@
                 Belum punya akun? <a href="<?= smart_url('register-siswa') ?>">Daftar Disini....!!</a>
             </div>
 
-            <footer>© <?= date('Y') ?> Sistem Informai </footer>
+            <footer>© <?= date('Y') ?> Sistem Informai akademik sekolah </footer>
         </div>
     </div>
 
