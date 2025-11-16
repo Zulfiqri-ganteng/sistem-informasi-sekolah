@@ -6,50 +6,26 @@ on:
       - main
 
 jobs:
-  deploy:
+  ftp-deploy:
+    name: Deploy via FTP
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      ###############################################
-      # 1) UPLOAD CI4 CORE (app, system, vendor, writable)
-      ###############################################
-      - name: Upload CI4 Core to Server Root
+      - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Folder project benar (di luar public_html)
-          server-dir: /sistem-informasi-akademik/
+          # Path absolut — WAJIB, supaya tidak bikin public_html baru
+          server-dir: ${{ secrets.FTP_PATH }}
 
-          # Upload semua kecuali PUBLIC folder
+          # Folder lokal yang mau diupload
           local-dir: "./"
-          exclude: |
-            public/**
-            .github/**
-            tests/**
-            README.md
 
-          dangerous-clean-slate: false
-
-      ###############################################
-      # 2) UPLOAD PUBLIC ke FOLDER DOMAIN
-      ###############################################
-      - name: Upload Public Folder to Domain Root
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-
-          # TARGET FOLDER DOMAIN (BENAR)
-          server-dir: /public_html/sekolah-galajuara.zulfiqri.com/
-
-          # Upload hanya folder public
-          local-dir: "./public/"
-
+          # Jangan hapus folder root di server
           dangerous-clean-slate: false
