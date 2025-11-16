@@ -21,8 +21,8 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Path absolut — WAJIB, supaya tidak bikin public_html baru
-          server-dir: ${{ secrets.FTP_PATH }}
+          # Path target — HARUS pakai slash di akhir
+          server-dir: ${{ secrets.FTP_PATH }}/
 
           # Folder lokal yang mau diupload
           local-dir: "./"
