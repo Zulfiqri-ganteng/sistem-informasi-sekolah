@@ -187,7 +187,7 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner-border" role="status"></div>
-        <p class="mt-2">Waiting...</p>
+        <p class="mt-2">Tunggu Sebentar...</p>
     </div>
 
     <!-- Login Form -->
