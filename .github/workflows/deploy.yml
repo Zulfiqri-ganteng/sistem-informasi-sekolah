@@ -7,7 +7,6 @@ on:
 
 jobs:
   ftp-deploy:
-    name: Deploy via FTP
     runs-on: ubuntu-latest
 
     steps:
@@ -20,12 +19,6 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-
-          # Path absolut target di server
           server-dir: ${{ secrets.FTP_PATH }}
-
-          # Upload seluruh folder project
           local-dir: "./"
-
-          # Jangan hapus folder root server
           dangerous-clean-slate: false
