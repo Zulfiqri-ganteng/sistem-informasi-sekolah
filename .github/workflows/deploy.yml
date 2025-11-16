@@ -19,6 +19,11 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}
+
+          # Tidak perlu path!
+          # Karena FTP user SUDAH diarahkan ke folder yang benar.
+          server-dir: ./
+
           local-dir: "./"
+
           dangerous-clean-slate: false
