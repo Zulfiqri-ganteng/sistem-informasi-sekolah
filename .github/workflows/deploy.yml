@@ -21,11 +21,11 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Path target — HARUS pakai slash di akhir
-          server-dir: ${{ secrets.FTP_PATH }}/
+          # Path absolut target di server
+          server-dir: ${{ secrets.FTP_PATH }}
 
-          # Folder lokal yang mau diupload
+          # Upload seluruh folder project
           local-dir: "./"
 
-          # Jangan hapus folder root di server
+          # Jangan hapus folder root server
           dangerous-clean-slate: false
