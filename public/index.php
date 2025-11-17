@@ -3,52 +3,40 @@
 use CodeIgniter\Boot;
 use Config\Paths;
 
-// ---------------------------------------------------------------
-// CEK VERSI PHP
-// ---------------------------------------------------------------
+/*
+ *---------------------------------------------------------------
+ * CHECK PHP VERSION
+ *---------------------------------------------------------------
+ */
+
 $minPhpVersion = '8.1';
 if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
-    header('HTTP/1.1 503 Service Unavailable', true, 503);
-    exit("PHP minimal {$minPhpVersion}, current: " . PHP_VERSION);
+    echo "PHP version must be {$minPhpVersion} or higher.";
+    exit(1);
 }
 
-// ---------------------------------------------------------------
-// SET FCPATH
-// ---------------------------------------------------------------
+/*
+ *---------------------------------------------------------------
+ * SET FCPATH
+ *---------------------------------------------------------------
+ */
 define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-// ---------------------------------------------------------------
-// TEMUKAN PATH KE FOLDER APP (OTOMATIS)
-// ---------------------------------------------------------------
+/*
+ *---------------------------------------------------------------
+ * LOAD PATHS
+ *---------------------------------------------------------------
+ * Folder app/ berada satu level di atas public/
+ */
+require FCPATH . '../app/Config/Paths.php';
 
-$possiblePaths = [
-    FCPATH . '../app/Config/Paths.php',      // untuk lokal XAMPP
-    FCPATH . '../../app/Config/Paths.php',   // untuk shared hosting
-    FCPATH . 'app/Config/Paths.php',         // jika CI4 di root sama-level
-];
-
-$pathsFile = null;
-
-foreach ($possiblePaths as $file) {
-    if (is_file($file)) {
-        $pathsFile = $file;
-        break;
-    }
-}
-
-// Jika tetap tidak ditemukan → error
-if (!$pathsFile) {
-    header('HTTP/1.1 503 Service Unavailable', true, 503);
-    exit("Tidak bisa menemukan file Paths.php. Periksa struktur folder.");
-}
-
-require $pathsFile;
-
-// ---------------------------------------------------------------
-// BOOT CODEIGNITER
-// ---------------------------------------------------------------
 $paths = new Paths();
 
+/*
+ *---------------------------------------------------------------
+ * BOOT CI4
+ *---------------------------------------------------------------
+ */
 require $paths->systemDirectory . '/Boot.php';
 
 exit(Boot::bootWeb($paths));
