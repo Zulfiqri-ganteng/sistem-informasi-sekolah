@@ -187,7 +187,7 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner-border" role="status"></div>
-        <p class="mt-2">Tunggu Sebentar Mas...</p>
+        <p class="mt-2">Tunggu Sebentar ya...</p>
     </div>
 
     <!-- Login Form -->
@@ -229,7 +229,7 @@
                 Belum punya akun? <a href="<?= smart_url('register-siswa') ?>">Daftar Disini....!!</a>
             </div>
 
-            <footer>© <?= date('Y') ?> Sistem Informai akademik sekolah </footer>
+            <footer>© <?= date('Y') ?> Sistem Inform akademik sekolah </footer>
         </div>
     </div>
 
