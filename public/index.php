@@ -3,54 +3,52 @@
 use CodeIgniter\Boot;
 use Config\Paths;
 
-/*
- * CHECK PHP VERSION
- */
-
+// ---------------------------------------------------------------
+// CEK VERSI PHP
+// ---------------------------------------------------------------
 $minPhpVersion = '8.1';
 if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
-    die("PHP version must be {$minPhpVersion} or higher");
+    header('HTTP/1.1 503 Service Unavailable', true, 503);
+    exit("PHP minimal {$minPhpVersion}, current: " . PHP_VERSION);
 }
 
-/*
- * FRONT CONTROLLER
- */
+// ---------------------------------------------------------------
+// SET FCPATH
+// ---------------------------------------------------------------
 define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-/*
- * DETEKSI MODE (LOKAL / HOSTING)
- */
-$isLocal = (php_sapi_name() === 'cli-server' || strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false);
+// ---------------------------------------------------------------
+// TEMUKAN PATH KE FOLDER APP (OTOMATIS)
+// ---------------------------------------------------------------
 
-/*
- * SET ROOT PROJECT
- *
- * Lokal:
- *   project ada di ../ (default CI4)
- *
- * Hosting:
- *   mas menaruh project langsung di:
- *   /home/zulh7811/public_html/sekolah-galajuara.zulfiqri.com/
- */
-if ($isLocal) {
-    // LOKAL
-    $rootPath = __DIR__ . '/../';
-} else {
-    // HOSTING
-    $rootPath = __DIR__ . '/';
+$possiblePaths = [
+    FCPATH . '../app/Config/Paths.php',      // untuk lokal XAMPP
+    FCPATH . '../../app/Config/Paths.php',   // untuk shared hosting
+    FCPATH . 'app/Config/Paths.php',         // jika CI4 di root sama-level
+];
+
+$pathsFile = null;
+
+foreach ($possiblePaths as $file) {
+    if (is_file($file)) {
+        $pathsFile = $file;
+        break;
+    }
 }
 
-chdir($rootPath);
+// Jika tetap tidak ditemukan → error
+if (!$pathsFile) {
+    header('HTTP/1.1 503 Service Unavailable', true, 503);
+    exit("Tidak bisa menemukan file Paths.php. Periksa struktur folder.");
+}
 
-/*
- * LOAD PATHS CONFIG
- */
-require $rootPath . 'app/Config/Paths.php';
+require $pathsFile;
+
+// ---------------------------------------------------------------
+// BOOT CODEIGNITER
+// ---------------------------------------------------------------
 $paths = new Paths();
 
-/*
- * BOOTSTRAP
- */
 require $paths->systemDirectory . '/Boot.php';
 
 exit(Boot::bootWeb($paths));
