@@ -1,79 +1,84 @@
-<!DOCTYPE html>
-<html lang="id">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Laporan Tabungan Siswa</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12px;
-            margin: 20px;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 0;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 0;
-        }
+    .kop {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+    }
 
-        h4 {
-            text-align: center;
-            margin-top: 5px;
-        }
+    .line {
+        border-top: 3px solid #000;
+        margin: 10px 0;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
 
-        th,
-        td {
-            border: 1px solid #666;
-            padding: 6px;
-        }
+    th {
+        background: #1F4E78;
+        color: white;
+        padding: 6px;
+        font-size: 11px;
+        border: 1px solid #333;
+    }
 
-        th {
-            background: #f0f0f0;
-        }
+    td {
+        padding: 5px;
+        border: 1px solid #666;
+    }
+</style>
 
-        .text-right {
-            text-align: right;
-        }
-    </style>
-</head>
+<div class="kop">
+    <div>PEMERINTAH KOTA BEKASI</div>
+    <div>SMK GALAJUARA</div>
+    <div style="font-weight: normal">Jl. Pendidikan No. 123 — Telp: (021) 1234567</div>
+</div>
+<div class="line"></div>
 
-<body>
-    <h2><?= esc($sekolah) ?></h2>
-    <h4>Laporan Tabungan Siswa<br><small>Dicetak: <?= esc($tanggal) ?></small></h4>
+<h2>LAPORAN TABUNGAN SISWA</h2>
+<p style="text-align:center">Tanggal: <?= $tanggal ?></p>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Jurusan</th>
+            <th>Total Setor</th>
+            <th>Total Tarik</th>
+            <th>Saldo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($laporan as $i => $r): ?>
             <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>Jurusan</th>
-                <th>Total Setoran</th>
-                <th>Total Tarikan</th>
-                <th>Saldo Akhir</th>
+                <td><?= $i + 1 ?></td>
+                <td><?= $r['nama'] ?></td>
+                <td><?= $r['kelas'] ?></td>
+                <td><?= $r['jurusan'] ?></td>
+                <td><?= number_format($r['total_setor'], 0, ',', '.') ?></td>
+                <td><?= number_format($r['total_tarik'], 0, ',', '.') ?></td>
+                <td><?= number_format($r['saldo'], 0, ',', '.') ?></td>
             </tr>
-        </thead>
-        <tbody>
-            <?php $no = 1;
-            foreach ($laporan as $r): ?>
-                <tr>
-                    <td><?= $no++ ?></td>
-                    <td><?= esc($r['nama']) ?></td>
-                    <td><?= esc($r['kelas']) ?></td>
-                    <td><?= esc($r['jurusan']) ?></td>
-                    <td class="text-right"><?= number_format($r['total_setor'], 0, ',', '.') ?></td>
-                    <td class="text-right"><?= number_format($r['total_tarik'], 0, ',', '.') ?></td>
-                    <td class="text-right"><b><?= number_format($r['saldo'], 0, ',', '.') ?></b></td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
-</body>
+        <?php endforeach ?>
+    </tbody>
+</table>
 
-</html>
+<br><br>
+<div style="text-align:right;">
+    Kepala Sekolah,<br><br><br>
+    _____________________
+</div>

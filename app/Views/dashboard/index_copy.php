@@ -28,7 +28,7 @@
 
                 <div class="d-flex flex-column">
                     <div class="fw-semibold m3-title-compact">Selamat Datang, <?= esc(session('nama') ?? 'Admin') ?></div>
-                    <div class="small text-muted">Sistem Tabungan Siswa</div>
+                    <div class="small text-muted">Sistem Informasi Sekolah</div>
                 </div>
             </div>
 

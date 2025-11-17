@@ -393,6 +393,22 @@ if ($total >= 2) {
                 width: 100% !important;
                 max-width: 100% !important;
             }
+
+            /* Logo fix for collapsed sidebar */
+            .sidebar.collapsed .logo {
+                padding: 14px 6px !important;
+            }
+
+            .sidebar.collapsed .logo img {
+                width: 46px !important;
+                height: 46px !important;
+            }
+
+            .sidebar.collapsed .logo span,
+            .sidebar.collapsed .logo small {
+                display: none !important;
+            }
+
         }
     </style>
 </head>
@@ -400,10 +416,35 @@ if ($total >= 2) {
 <body>
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" aria-label="Main sidebar">
-        <div class="logo">
-            <i class="fa fa-graduation-cap"></i>
-            <span>My Deposite</span>
+        <div class="logo" style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 10px;
+    text-align: center;
+    background: #1e293b;
+">
+            <img src="<?= smart_url('assets/img/logo.png') ?>"
+                alt="Logo Sekolah"
+                style="
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 6px;
+         ">
+
+            <span style="font-size: 1rem; font-weight: 700; letter-spacing: .3px;">
+                SMK Galajuara
+            </span>
+
+            <small style="font-size: .78rem; opacity: .85; margin-top: -2px;">
+                Sistem Informasi Akademik
+            </small>
         </div>
+
+
 
         <?php $role = session()->get('role'); ?>
 

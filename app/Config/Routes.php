@@ -181,15 +181,21 @@ $routes->group('tabungan', ['filter' => 'auth'], function ($routes) {
 // =====================
 // 📊 LAPORAN
 // =====================
+// ========================
+// LAPORAN TABUNGAN (group + filter)
 $routes->group('laporan', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('/', 'Laporan::index');                   // tampilan utama
-    $routes->get('data', 'Laporan::data');                 // AJAX data untuk DataTables
-    $routes->get('detail/(:num)', 'Laporan::detail/$1');   // detail transaksi per siswa
 
-    // ✅ tambahkan dua export baru
-    $routes->get('export-excel', 'Laporan::exportExcel');  // ekspor Excel
-    $routes->get('export-pdf', 'Laporan::exportPdf');      // ekspor PDF
+    $routes->get('/', 'Laporan::index');
+    $routes->get('data', 'Laporan::data');
+    $routes->get('detail/(:num)', 'Laporan::detail/$1');
+
+    // EXPORT FIX
+    $routes->get('export-excel', 'Laporan::exportExcel');
+    $routes->get('export-pdf', 'Laporan::exportPdf');
+    $routes->get('export-word', 'Laporan::exportWord');
 });
+
+
 
 // Manajemen User (admin only)
 $routes->group('users', ['filter' => 'role:admin'], function ($routes) {

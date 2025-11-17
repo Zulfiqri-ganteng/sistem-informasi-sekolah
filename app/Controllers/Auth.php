@@ -217,30 +217,40 @@ class Auth extends BaseController
             return redirect()->back()->with('error', 'Email tidak ditemukan.');
         }
 
+        // Generate token
         $token = bin2hex(random_bytes(32));
         $expires = Time::now()->addMinutes(30);
 
+        // Simpan ke database
         $this->db->table('password_resets')->insert([
             'email'      => $email,
             'token'      => $token,
             'expires_at' => $expires->toDateTimeString()
         ]);
 
+        // Link reset
         $link = base_url("reset-password/$token");
 
+        // ===== 🔥 PANGGIL TEMPLATE EMAIL BARU =====
+        $content = view('auth/email_reset_password', ['link' => $link]);
+
+        $html = view('auth/email_template', [
+            'subject' => 'Reset Password - Sistem Informasi Sekolah',
+            'content' => $content
+        ]);
+
+        // Kirim email
         $mail = Services::email();
         $mail->setTo($email);
         $mail->setSubject('Reset Password - Sistem Informasi Sekolah');
-        $mail->setMessage("
-            <p>Silakan klik link berikut untuk mereset password Anda:</p>
-            <p><a href='$link'>$link</a></p>
-        ");
+        $mail->setMessage($html);
         $mail->setMailType('html');
         @$mail->send();
 
         return redirect()->to('login')
             ->with('success', 'Link reset password sudah dikirim ke email Anda.');
     }
+
 
     // --------------------------------------------------------
     // 🛠 Reset Password dengan Token
