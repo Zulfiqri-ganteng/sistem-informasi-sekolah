@@ -3,40 +3,30 @@
 use CodeIgniter\Boot;
 use Config\Paths;
 
-/*
- *---------------------------------------------------------------
- * CHECK PHP VERSION
- *---------------------------------------------------------------
+/**
+ * KONFIGURASI OTOMATIS LOKAL / HOSTING
+ * ====================================================
+ * Jika berjalan di hosting, CI otomatis mencari folder
+ * di direktori saat ini (public_html/sekolah-galajuara)
+ * Jika di lokal, CI otomatis membaca folder project lokal.
  */
 
-$minPhpVersion = '8.1';
-if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
-    echo "PHP version must be {$minPhpVersion} or higher.";
-    exit(1);
+$root = dirname(__DIR__);
+
+// Jika di hosting (public_html)
+if (is_dir($root . '/app') && is_file($root . '/app/Config/Paths.php')) {
+    define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+    require $root . '/app/Config/Paths.php';
 }
 
-/*
- *---------------------------------------------------------------
- * SET FCPATH
- *---------------------------------------------------------------
- */
-define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
-
-/*
- *---------------------------------------------------------------
- * LOAD PATHS
- *---------------------------------------------------------------
- * Folder app/ berada satu level di atas public/
- */
-require FCPATH . '../app/Config/Paths.php';
+// Jika di lokal (xampp / htdocs)
+elseif (is_dir($root . '/app') && is_file($root . '/app/Config/Paths.php')) {
+    define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+    require $root . '/app/Config/Paths.php';
+}
 
 $paths = new Paths();
 
-/*
- *---------------------------------------------------------------
- * BOOT CI4
- *---------------------------------------------------------------
- */
 require $paths->systemDirectory . '/Boot.php';
 
 exit(Boot::bootWeb($paths));
