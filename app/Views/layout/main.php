@@ -33,9 +33,6 @@ if ($total >= 2) {
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
     <!-- SELECT2 CSS & JS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-
-
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -534,6 +531,49 @@ if ($total >= 2) {
                         </li>
                     </ul>
                 </li>
+                <!-- ABSENSI BARCODE -->
+                <li>
+                    <a href="#" class="dropdown-toggle <?= in_array($segment, ['absensi', 'scan-guru', 'scan-siswa', 'riwayat-absensi']) ? 'dropdown-open' : '' ?>">
+                        <i class="fa fa-barcode"></i> <span>Absensi Barcode</span>
+                        <span class="chevron">▾</span>
+                    </a>
+
+                    <ul class="submenu <?= in_array($segment, ['absensi', 'scan-guru', 'scan-siswa', 'riwayat-absensi']) ? 'show' : '' ?>">
+
+                        <!-- Generate QR -->
+                        <li>
+                            <a href="<?= smart_url('absensi/generate') ?>" class="<?= $segment === 'generate' || $segment === 'absensi' ? 'active' : '' ?>">
+                                Generate Barcode
+                            </a>
+                        </li>
+
+                        <!-- Scan Guru -->
+                        <li>
+                            <a href="<?= smart_url('absensi/scan-guru') ?>" class="<?= $segment === 'scan-guru' ? 'active' : '' ?>">
+                                Scan Guru
+                            </a>
+                        </li>
+
+                        <!-- Scan Siswa -->
+                        <li>
+                            <a href="<?= smart_url('absensi/scan-siswa') ?>" class="<?= $segment === 'scan-siswa' ? 'active' : '' ?>">
+                                Scan Siswa
+                            </a>
+                        </li>
+
+                        <!-- Riwayat -->
+                        <li>
+                            <a href="<?= smart_url('absensi/riwayat') ?>" class="<?= $segment === 'riwayat-absensi' ? 'active' : '' ?>">
+                                Riwayat Absensi
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
+
+
 
                 <!-- Lainnya (langsung link) -->
                 <li>

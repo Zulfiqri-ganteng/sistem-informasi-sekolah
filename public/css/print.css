@@ -1,0 +1,99 @@
+/* =====================================================================
+   PRINT CSS — Premium Clean Version
+   Khusus untuk print kartu barcode/ID agar hasil rapi & profesional
+   ===================================================================== */
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+html,
+body {
+  background: #fff !important;
+  padding: 0;
+  margin: 0;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+}
+
+/* Semua elemen non-print disembunyikan */
+body * {
+  visibility: hidden !important;
+}
+
+/* Area kartu yang boleh tercetak */
+.print-area,
+.print-area * {
+  visibility: visible !important;
+}
+
+.print-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 14px;
+  width: 100%;
+}
+
+/* Kartu */
+.card-id {
+  width: 320px !important;
+  height: 200px !important;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 8px;
+  background: #ffffff;
+  box-shadow: none !important;
+
+  /* tampilan elegan di print */
+  border: 1px solid #cbd5e1;
+  display: flex;
+  gap: 10px;
+}
+
+/* Foto */
+.card-id .photo {
+  width: 86px !important;
+  height: 110px !important;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+}
+
+/* Nama & meta */
+.card-id .name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.card-id .meta {
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Barcode */
+.card-id svg {
+  margin-top: 6px;
+}
+
+/* QR code */
+.card-id #qrcode {
+  margin-top: 6px;
+}
+
+/* Grid layout di print */
+.print-area {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+/* Hilangkan tombol agar tidak ikut tercetak */
+button,
+.actions,
+.btn,
+.no-print {
+  display: none !important;
+}

@@ -205,6 +205,35 @@ $routes->group('users', ['filter' => 'role:admin'], function ($routes) {
 });
 
 
+
+
+
+
+// absensi barcode (group)
+$routes->group('absensi', function ($routes) {
+
+    // FORM
+    $routes->get('generate', 'AbsensiBarcode::generateForm');
+    $routes->post('generate', 'AbsensiBarcode::generate');
+
+    // SINGLE QR
+    $routes->get('qrcode/(:num)', 'AbsensiBarcode::qrcode/$1');
+
+    // AJAX list
+    $routes->get('get-list/(:segment)', 'AbsensiBarcode::getList/$1');
+
+    // BUNDLE VIEW
+    $routes->get('qrcode-bundle', 'AbsensiBarcode::qrcodeBundle');
+
+    // DOWNLOAD ZIP
+    $routes->post('download-bundle', 'AbsensiBarcode::downloadBundle');
+});
+
+
+
+
+
+
 // =====================
 // ⚙️ DEFAULTS
 // =====================
