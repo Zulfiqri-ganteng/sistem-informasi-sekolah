@@ -1,17 +1,13 @@
 <?= $this->extend('layout/main'); ?>
 <?= $this->section('content'); ?>
 
-<!-- Dependencies -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container-fluid py-3">
 
-    <!-- COMPACT HEADER -->
     <div class="m3-header-compact mb-3 p-3 rounded-2 shadow-elev-2">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-
-            <!-- LEFT: Avatar + Info -->
             <div class="d-flex align-items-center gap-2">
                 <div class="m3-avatar-compact overflow-hidden d-flex align-items-center justify-content-center">
                     <?php
@@ -32,7 +28,6 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Compact counters -->
             <div class="d-flex align-items-center gap-3 m3-counters-compact">
                 <div class="text-center">
                     <div class="small text-muted">Siswa</div>
@@ -55,11 +50,108 @@
                     <i class="fa-solid fa-rotate me-1"></i>
                 </button>
             </div>
-
         </div>
     </div>
 
-    <!-- STATISTIC CARDS (COMPACT) -->
+    <div class="row mb-3 g-2">
+        <div class="col-6 col-md-3">
+            <select id="filterJurusan" class="form-select">
+                <option value="all">Semua Jurusan</option>
+                <?php foreach ($jurusanList as $j): ?>
+                    <option value="<?= $j ?>" <?= ($selectedJurusan ?? 'all') === $j ? 'selected' : '' ?>>
+                        <?= $j ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select id="filterKelas" class="form-select">
+                <option value="all">Semua Kelas</option>
+                <?php
+                $selectedKelasFiltered = [];
+                // Filter kelasList berdasarkan jurusan yang dipilih saat ini
+                foreach ($kelasList as $k) {
+                    // Jika tidak ada jurusan yang dipilih (all) atau jurusannya cocok
+                    if (($selectedJurusan === 'all') || ($k['jurusan'] === $selectedJurusan)) {
+                        $selectedKelasFiltered[] = $k;
+                    }
+                }
+                ?>
+                <?php foreach ($selectedKelasFiltered as $k): ?>
+                    <option value="<?= $k['kelas'] ?>" <?= ($selectedKelas ?? 'all') === $k['kelas'] ? 'selected' : '' ?>>
+                        <?= $k['kelas'] ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <div class="m3-panel-compact">
+                <div class="m3-panel-header-compact d-flex align-items-center justify-content-between">
+                    <div class="fw-semibold"><i class="fa-solid fa-user-check me-1"></i> Absensi Hari Ini</div>
+                    <small class="text-muted"><?= date('d M Y', strtotime($today ?? date('Y-m-d'))) ?></small>
+                </div>
+
+                <div class="m3-panel-body-compact p-3">
+                    <div class="row g-2">
+                        <div class="col-6 col-md-2">
+                            <div class="m3-card-compact text-center">
+                                <small class="text-muted d-block">Hadir</small>
+                                <div class="fw-bold display-6-sm text-success" id="countHadir"><?= $hadir ?? 0 ?></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <div class="m3-card-compact text-center">
+                                <small class="text-muted d-block">Terlambat</small>
+                                <div class="fw-bold display-6-sm text-warning" id="countTelat"><?= $telat ?? 0 ?></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <div class="m3-card-compact text-center">
+                                <small class="text-muted d-block">Izin</small>
+                                <div class="fw-bold display-6-sm text-info" id="countIzin"><?= $izin ?? 0 ?></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <div class="m3-card-compact text-center">
+                                <small class="text-muted d-block">Sakit</small>
+                                <div class="fw-bold display-6-sm text-primary" id="countSakit"><?= $sakit ?? 0 ?></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <div class="m3-card-compact text-center">
+                                <small class="text-muted d-block">Pulang Awal</small>
+                                <div class="fw-bold display-6-sm text-danger" id="countPulangAwal"><?= $pulang_awal ?? 0 ?></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 mt-2">
+                            <div class="table-responsive" style="max-height:340px; overflow:auto;">
+                                <table id="tableRekapAbsensi" class="table table-sm table-striped table-hover mb-0 w-100">
+                                    <thead class="table-light small">
+                                        <tr>
+                                            <th>Nama</th>
+                                            <th>Jenis</th>
+                                            <th class="d-none d-md-table-cell">Kelas</th>
+                                            <th>Masuk</th>
+                                            <th>Pulang</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-2 mb-3">
         <div class="col-6 col-md-3">
             <div class="m3-card-compact">
@@ -94,11 +186,8 @@
         </div>
     </div>
 
-    <!-- MAIN GRID -->
     <div class="row g-3">
         <div class="col-lg-8">
-
-            <!-- Chart: Tabungan Tahunan (compact panel) -->
             <div class="m3-panel-compact mb-2">
                 <div class="m3-panel-header-compact d-flex align-items-center justify-content-between">
                     <div class="fw-semibold"><i class="fa-solid fa-chart-column me-1"></i> Grafik Tabungan Tahunan</div>
@@ -109,7 +198,6 @@
                 </div>
             </div>
 
-            <!-- Top 5 Penabung -->
             <div class="m3-panel-compact mb-2">
                 <div class="m3-panel-header-compact fw-semibold">
                     <i class="fa-solid fa-trophy me-1 text-warning"></i> Top 5 Penabung
@@ -144,7 +232,6 @@
                 </div>
             </div>
 
-            <!-- Statistik per Kelas (compact) -->
             <div class="m3-panel-compact mb-2">
                 <div class="m3-panel-header-compact bg-info text-white fw-semibold">
                     <i class="fa-solid fa-school me-1"></i> Statistik per Kelas
@@ -171,13 +258,9 @@
                     <?php endif; ?>
                 </div>
             </div>
-
         </div>
 
-        <!-- RIGHT COLUMN (compact) -->
         <div class="col-lg-4">
-
-            <!-- Transaksi Terakhir -->
             <div class="m3-panel-compact mb-2">
                 <div class="m3-panel-header-compact d-flex align-items-center justify-content-between">
                     <div><i class="fa-solid fa-clock-rotate-left me-1"></i> Transaksi</div>
@@ -200,40 +283,10 @@
                 </div>
             </div>
 
-            <!-- Aktivitas Terbaru -->
-            <div class="m3-panel-compact">
-                <div class="m3-panel-header-compact fw-semibold">
-                    <i class="fa-solid fa-stream me-1"></i> Aktivitas
-                </div>
-                <div class="m3-panel-body-compact" style="max-height:320px;overflow:auto;">
-                    <?php if (!empty($recentActivities)): ?>
-                        <ul class="timeline list-unstyled mb-0 small">
-                            <?php foreach ($recentActivities as $act): ?>
-                                <li class="mb-2 d-flex">
-                                    <div class="me-2">
-                                        <span class="badge rounded-circle bg-light text-dark d-inline-flex align-items-center justify-content-center" style="width:36px;height:36px;">
-                                            <i class="<?= esc($act['icon'] ?? 'fa-solid fa-circle-info') ?> small"></i>
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted small"><?= date('d M H:i', strtotime($act['created_at'] ?? date('Y-m-d H:i'))) ?></div>
-                                        <div class="fw-semibold"><?= esc($act['title'] ?? '-') ?></div>
-                                    </div>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <div class="small text-muted p-2">Belum ada aktivitas.</div>
-                    <?php endif; ?>
-                </div>
-            </div>
-
         </div>
     </div>
 
-</div> <!-- container -->
-
-<!-- COMPACT STYLES -->
+</div>
 <style>
     :root {
         --m3-surface: #ffffff;
@@ -242,7 +295,6 @@
         --radius-sm: 10px;
     }
 
-    /* header compact */
     .m3-header-compact {
         background: linear-gradient(90deg, rgba(11, 58, 102, 0.04), rgba(11, 58, 102, 0.01));
         border-left: 3px solid var(--m3-primary);
@@ -270,18 +322,11 @@
         font-size: 1rem;
     }
 
-    /* compact counters */
     .m3-counters-compact {
         align-items: center;
         gap: 8px;
     }
 
-    .m3-counters-compact .h6 {
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    /* compact cards */
     .m3-card-compact {
         background: var(--m3-surface);
         padding: 10px;
@@ -301,7 +346,6 @@
         width: 120px;
     }
 
-    /* compact panels */
     .m3-panel-compact {
         background: var(--m3-surface);
         border-radius: 12px;
@@ -322,33 +366,12 @@
         padding: 8px 10px;
     }
 
-    /* tables & timeline small tweaks */
     table.table-sm td,
     table.table-sm th {
         padding: .35rem .5rem;
         vertical-align: middle;
     }
 
-    .timeline li {
-        border-left: 2px solid #eef3f7;
-        padding-left: 10px;
-        position: relative;
-        margin-bottom: 6px;
-    }
-
-    .timeline li::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #fff;
-        border: 2px solid var(--m3-primary);
-        border-radius: 50%;
-        position: absolute;
-        left: -6px;
-        top: 6px;
-    }
-
-    /* responsive: make compact feel wider on mobile by reducing paddings */
     @media (max-width: 768px) {
         .container-fluid {
             padding-left: 8px;
@@ -373,7 +396,6 @@
     }
 </style>
 
-<!-- SCRIPTS: keep all existing logic/IDs unchanged -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -499,7 +521,7 @@
             });
         }
 
-        // DataTables for transaksi (kept identical)
+        // DataTables for transaksi
         $('#tableTransaksi').DataTable({
             ajax: {
                 url: '<?= smart_url('dashboard/transaksiAjax') ?>',
@@ -540,7 +562,7 @@
             }
         });
 
-        // Refresh
+        // Refresh button
         document.getElementById('btnRefreshDashboard').addEventListener('click', () => {
             Swal.fire({
                 toast: true,
@@ -552,6 +574,174 @@
             });
             setTimeout(() => location.reload(), 700);
         });
+
+        // DataTables untuk Rekap Absensi (dipindahkan ke sini)
+        let tableAbsensi = $('#tableRekapAbsensi').DataTable({
+            processing: true,
+            serverSide: false, // Diganti ke false karena data sudah di-render atau akan di-load melalui JS biasa
+            // Menggunakan data yang sudah di-render oleh PHP
+            data: <?= json_encode($rekap ?? []) ?>,
+            columns: [{
+                    data: 'nama'
+                },
+                {
+                    data: 'user_type',
+                    render: d => d.charAt(0).toUpperCase() + d.slice(1)
+                },
+                {
+                    data: 'kelas',
+                    defaultContent: '-',
+                    className: 'd-none d-md-table-cell'
+                },
+                {
+                    data: 'jam_masuk',
+                    defaultContent: '-'
+                },
+                {
+                    data: 'jam_pulang',
+                    defaultContent: '-'
+                },
+                {
+                    data: 'status',
+                    render: function(status) {
+                        if (status === 'terlambat')
+                            return `<span class="badge bg-warning text-dark fw-bold">TERLAMBAT</span>`;
+                        if (status === 'masuk')
+                            return `<span class="badge bg-success fw-bold">MASUK</span>`;
+                        return `<span class="badge bg-secondary fw-bold">${status.toUpperCase()}</span>`;
+                    }
+                }
+            ],
+            // Matikan fitur Datatables yang mengganggu
+            paging: false,
+            searching: false,
+            info: false,
+            responsive: true,
+            order: [
+                [3, 'asc']
+            ],
+            language: {
+                emptyTable: "Belum ada data absensi hari ini."
+            }
+        });
+
+
+        // Fungsi untuk me-load dropdown Kelas berdasarkan Jurusan
+        function loadKelas(jurusan) {
+            // URL yang benar harus memanggil controller/kelas
+            $.get("<?= smart_url('dashboard/kelas') ?>/" + encodeURIComponent(jurusan), function(response) {
+                let html = '<option value="all">Semua Kelas</option>';
+                response.kelas.forEach(k => {
+                    html += `<option value="${k}">${k}</option>`;
+                });
+                $('#filterKelas').html(html);
+                // Setelah kelas di-load, reset filter kelas
+                $('#filterKelas').val('all');
+                // Panggil AJAX Absensi setelah filter kelas diperbarui
+                reloadAbsensi();
+            }).fail(function() {
+                // Tambahkan penanganan error jika Ajax gagal
+                console.error("Gagal memuat data kelas.");
+                let html = '<option value="all">Semua Kelas</option>';
+                $('#filterKelas').html(html);
+            });
+        }
+
+        // Fungsi untuk me-load data Absensi (rekap & counts) menggunakan AJAX
+        function reloadAbsensi() {
+            const jurusan = $('#filterJurusan').val() || 'all';
+            const kelas = $('#filterKelas').val() || 'all';
+
+            $.get('<?= smart_url('dashboard/absensiAjax') ?>', {
+                jurusan: jurusan,
+                kelas: kelas
+            }, function(response) {
+                // 1. Update Counts
+                $('#countHadir').text(response.counts.masuk);
+                $('#countTelat').text(response.counts.terlambat);
+                $('#countIzin').text(response.counts.izin);
+                $('#countSakit').text(response.counts.sakit);
+                $('#countPulangAwal').text(response.counts.pulang_awal);
+
+                // 2. Update Rekap Table
+                // Hancurkan DataTables yang lama
+                if ($.fn.DataTable.isDataTable('#tableRekapAbsensi')) {
+                    tableAbsensi.destroy();
+                }
+
+                // Inisialisasi DataTables baru dengan data dari AJAX
+                tableAbsensi = $('#tableRekapAbsensi').DataTable({
+                    data: response.rekap,
+                    columns: [{
+                            data: 'nama'
+                        },
+                        {
+                            data: 'user_type',
+                            render: d => d.charAt(0).toUpperCase() + d.slice(1)
+                        },
+                        {
+                            data: 'kelas',
+                            defaultContent: '-',
+                            className: 'd-none d-md-table-cell'
+                        },
+                        {
+                            data: 'jam_masuk',
+                            defaultContent: '-'
+                        },
+                        {
+                            data: 'jam_pulang',
+                            defaultContent: '-'
+                        },
+                        {
+                            data: 'status',
+                            render: function(status) {
+                                if (status === 'terlambat')
+                                    return `<span class="badge bg-warning text-dark fw-bold">TERLAMBAT</span>`;
+                                if (status === 'masuk')
+                                    return `<span class="badge bg-success fw-bold">MASUK</span>`;
+                                return `<span class="badge bg-secondary fw-bold">${status.toUpperCase()}</span>`;
+                            }
+                        }
+                    ],
+                    // Matikan fitur Datatables yang mengganggu
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    responsive: true,
+                    order: [
+                        [3, 'asc']
+                    ],
+                    language: {
+                        emptyTable: "Belum ada data absensi hari ini."
+                    }
+                });
+
+            }).fail(function() {
+                console.error("Gagal memuat data absensi.");
+            });
+        }
+
+        // FILTER: PENGATURAN LOGIKA FILTER
+        // 1. Ganti Jurusan: Muat Kelas baru & Reload Absensi
+        $('#filterJurusan').on('change', function() {
+            const selectedJurusan = $(this).val();
+            if (selectedJurusan) {
+                loadKelas(selectedJurusan); // loadKelas akan memanggil reloadAbsensi()
+            } else {
+                // Jika "Semua Jurusan" dipilih, panggil reloadAbsensi langsung
+                reloadAbsensi();
+            }
+        });
+
+        // 2. Ganti Kelas: Reload Absensi
+        $('#filterKelas').on('change', function() {
+            reloadAbsensi();
+        });
+
+        // Inisialisasi data absensi (jika belum diisi oleh PHP di bagian atas)
+        // Jika Anda menggunakan Datatables di bagian rekapAbsensi, pastikan Anda menggunakan AJAX
+        // atau memanggil fungsi reloadAbsensi() di akhir DOMContentLoaded
+        // Karena kita sudah memuat rekap awal di PHP, kita hanya perlu mengatur filter.
 
     });
 </script>

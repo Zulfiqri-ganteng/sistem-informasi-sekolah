@@ -34,6 +34,8 @@ if ($total >= 2) {
     <!-- SELECT2 CSS & JS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- SweetAlert -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Custom Style (Premium Minimal) -->
@@ -447,19 +449,23 @@ if ($total >= 2) {
 
         <ul class="menu-list mt-3">
 
-            <!-- DASHBOARD COMMON (all roles will have a dashboard link, adjusted per role) -->
+            <!-- ==============================
+         DASHBOARD (SEMUA ROLE)
+    =============================== -->
             <?php if ($role === 'admin'): ?>
                 <li>
-                    <a href="<?= smart_url('dashboard') ?>" class="menu-link <?= $segment === 'dashboard' || $segment === '' ? 'active' : '' ?>">
+                    <a href="<?= smart_url('dashboard') ?>" class="menu-link <?= $segment === 'dashboard' ? 'active' : '' ?>">
                         <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
+
             <?php elseif ($role === 'guru'): ?>
                 <li>
                     <a href="<?= smart_url('guru/dashboard') ?>" class="menu-link <?= $segment === 'dashboard' ? 'active' : '' ?>">
                         <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
+
             <?php elseif ($role === 'siswa'): ?>
                 <li>
                     <a href="<?= smart_url('siswa/dashboard') ?>" class="menu-link <?= $segment === 'dashboard' ? 'active' : '' ?>">
@@ -468,46 +474,25 @@ if ($total >= 2) {
                 </li>
             <?php endif; ?>
 
-            <!-- ADMIN MENU: Dropdown Professional -->
+
+            <!-- ==============================
+         ADMIN MENU
+    =============================== -->
             <?php if ($role === 'admin'): ?>
 
                 <!-- Manajemen Sekolah -->
                 <li>
                     <a href="#" class="dropdown-toggle <?= in_array($segment, ['siswa', 'guru', 'kelas', 'mapel', 'jurusan']) ? 'dropdown-open' : '' ?>">
-                        <i class="fa fa-school"></i> <span>Manajemen Sekolah</span>
+                        <i class="fa fa-school"></i> <span>Master Data Utama</span>
                         <span class="chevron">▾</span>
                     </a>
 
                     <ul class="submenu <?= in_array($segment, ['siswa', 'guru', 'kelas', 'mapel', 'jurusan']) ? 'show' : '' ?>">
-                        <li>
-                            <a href="<?= smart_url('siswa') ?>" class="<?= $segment === 'siswa' ? 'active' : '' ?>">
-                                Data Siswa
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="<?= smart_url('admin/guru') ?>" class="<?= $segment === 'guru' ? 'active' : '' ?>">
-                                Data Guru
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="<?= smart_url('kelas') ?>" class="<?= $segment === 'kelas' ? 'active' : '' ?>">
-                                Data Kelas
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="<?= smart_url('mapel') ?>" class="<?= $segment === 'mapel' ? 'active' : '' ?>">
-                                Data Mapel
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="<?= smart_url('jurusan') ?>" class="<?= $segment === 'jurusan' ? 'active' : '' ?>">
-                                Data Jurusan
-                            </a>
-                        </li>
+                        <li><a href="<?= smart_url('siswa') ?>" class="<?= $segment === 'siswa' ? 'active' : '' ?>">Data Siswa</a></li>
+                        <li><a href="<?= smart_url('admin/guru') ?>" class="<?= $segment === 'guru' ? 'active' : '' ?>">Data Guru</a></li>
+                        <li><a href="<?= smart_url('kelas') ?>" class="<?= $segment === 'kelas' ? 'active' : '' ?>">Data Kelas</a></li>
+                        <li><a href="<?= smart_url('mapel') ?>" class="<?= $segment === 'mapel' ? 'active' : '' ?>">Data Mapel</a></li>
+                        <li><a href="<?= smart_url('jurusan') ?>" class="<?= $segment === 'jurusan' ? 'active' : '' ?>">Data Jurusan</a></li>
                     </ul>
                 </li>
 
@@ -519,114 +504,124 @@ if ($total >= 2) {
                     </a>
 
                     <ul class="submenu <?= in_array($segment, ['tabungan', 'laporan']) ? 'show' : '' ?>">
-                        <li>
-                            <a href="<?= smart_url('tabungan') ?>" class="<?= $segment === 'tabungan' ? 'active' : '' ?>">
-                                Tabungan
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= smart_url('laporan') ?>" class="<?= $segment === 'laporan' ? 'active' : '' ?>">
-                                Laporan
-                            </a>
-                        </li>
+                        <li><a href="<?= smart_url('tabungan') ?>" class="<?= $segment === 'tabungan' ? 'active' : '' ?>">Tabungan</a></li>
+                        <li><a href="<?= smart_url('laporan') ?>" class="<?= $segment === 'laporan' ? 'active' : '' ?>">Laporan</a></li>
                     </ul>
                 </li>
-                <!-- ABSENSI BARCODE -->
+
+                <!-- Absensi -->
+                <?php
+                // Menggunakan URI Path untuk pengecekan menu aktif yang lebih akurat
+                $currentUri = service('uri')->getPath();
+                $isAbsensiActive = strpos($currentUri, 'absensi') !== false;
+                ?>
                 <li>
-                    <a href="#" class="dropdown-toggle <?= in_array($segment, ['absensi', 'scan-guru', 'scan-siswa', 'riwayat-absensi']) ? 'dropdown-open' : '' ?>">
-                        <i class="fa fa-barcode"></i> <span>Absensi Barcode</span>
+                    <a href="#" class="dropdown-toggle <?= $isAbsensiActive ? 'dropdown-open' : '' ?>">
+                        <i class="fa fa-qrcode"></i> <span> Absensi</span>
                         <span class="chevron">▾</span>
                     </a>
 
-                    <ul class="submenu <?= in_array($segment, ['absensi', 'scan-guru', 'scan-siswa', 'riwayat-absensi']) ? 'show' : '' ?>">
+                    <!-- Catatan: Untuk Submenu, kita perlu memastikan $segment mencakup 'izin/admin' -->
+                    <ul class="submenu <?= $isAbsensiActive ? 'show' : '' ?>">
+                        <li><a href="<?= smart_url('absensi/dashboard') ?>" class="<?= $segment === 'dashboard' ? 'active' : '' ?>">Data Utama</a></li>
+                        <li><a href="<?= smart_url('absensi/generate') ?>" class="<?= $segment === 'generate' ? 'active' : '' ?>">Generate QR</a></li>
+                        <li><a href="<?= smart_url('absensi/scan-camera') ?>" class="<?= $segment === 'scan-camera' ? 'active' : '' ?>">Scan QR</a></li>
+                        <li><a href="<?= smart_url('absensi/riwayat') ?>" class="<?= $segment === 'riwayat' ? 'active' : '' ?>">Riwayat Absensi</a></li>
 
-                        <!-- Generate QR -->
-                        <li>
-                            <a href="<?= smart_url('absensi/generate') ?>" class="<?= $segment === 'generate' || $segment === 'absensi' ? 'active' : '' ?>">
-                                Generate Barcode
-                            </a>
-                        </li>
-
-                        <!-- Scan Guru -->
-                        <li>
-                            <a href="<?= smart_url('absensi/scan-guru') ?>" class="<?= $segment === 'scan-guru' ? 'active' : '' ?>">
-                                Scan Guru
-                            </a>
-                        </li>
-
-                        <!-- Scan Siswa -->
-                        <li>
-                            <a href="<?= smart_url('absensi/scan-siswa') ?>" class="<?= $segment === 'scan-siswa' ? 'active' : '' ?>">
-                                Scan Siswa
-                            </a>
-                        </li>
-
-                        <!-- Riwayat -->
-                        <li>
-                            <a href="<?= smart_url('absensi/riwayat') ?>" class="<?= $segment === 'riwayat-absensi' ? 'active' : '' ?>">
-                                Riwayat Absensi
-                            </a>
-                        </li>
-
+                        <!-- PERUBAHAN KRUSIAL DI SINI: Mengubah URL ke /absensi/izin/admin -->
+                        <li><a
+                                href="<?= smart_url('absensi/izin/admin') ?>"
+                                class="<?= $segment === 'izin' || $segment === 'admin' ? 'active' : '' // Menambahkan cek 'admin' jika itu segmen terakhir
+                                        ?>">Kelola Izin</a></li>
                     </ul>
                 </li>
 
-
-
-
-
-                <!-- Lainnya (langsung link) -->
+                <!-- Manajemen User -->
                 <li>
                     <a href="<?= smart_url('users') ?>" class="menu-link <?= $segment === 'users' ? 'active' : '' ?>">
                         <i class="fa fa-user-shield"></i> <span>Manajemen User</span>
                     </a>
                 </li>
 
-            <?php elseif ($role === 'guru'): ?>
-                <!-- GURU: keep simple links (you can extend similarly) -->
+            <?php endif; ?>
+
+
+            <!-- ==============================
+         GURU MENU
+    =============================== -->
+            <?php if ($role === 'guru'): ?>
+
+                <!-- Absensi Guru -->
                 <li>
-                    <a href="#"
-                        class="menu-link"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalTransaksi">
-                        <i class="fa-solid fa-money-bill-transfer"></i>
-                        <span>Transaksi</span>
+                    <a href="#" class="dropdown-toggle <?= in_array($segment, ['scan-camera', 'riwayat', 'izin']) ? 'dropdown-open' : '' ?>">
+                        <i class="fa fa-qrcode"></i> <span>Absensi</span>
+                        <span class="chevron">▾</span>
                     </a>
+
+                    <ul class="submenu <?= in_array($segment, ['scan-camera', 'riwayat', 'izin']) ? 'show' : '' ?>">
+                        <li><a href="<?= smart_url('absensi/scan-camera') ?>" class="<?= $segment === 'scan-camera' ? 'active' : '' ?>">Scan QR</a></li>
+                        <li><a href="<?= smart_url('absensi/riwayat') ?>" class="<?= $segment === 'riwayat' ? 'active' : '' ?>">Riwayat Absensi</a></li>
+                        <li><a href="<?= smart_url('absensi/izin') ?>" class="<?= $segment === 'izin' ? 'active' : '' ?>">Daftar Izin Siswa</a></li>
+                    </ul>
                 </li>
+
                 <li>
                     <a href="<?= smart_url('guru/kelas') ?>" class="menu-link <?= $segment === 'kelas' ? 'active' : '' ?>">
                         <i class="fa fa-users"></i> <span>Kelas Saya</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="<?= smart_url('guru/siswa') ?>" class="menu-link <?= $segment === 'siswa' ? 'active' : '' ?>">
                         <i class="fa fa-user-graduate"></i> <span>Siswa Bimbingan</span>
                     </a>
                 </li>
+
                 <li>
-                    <a href="<?= smart_url('guru/tugas') ?>"
-                        class="menu-link <?= $segment === 'tugas' ? 'active' : '' ?>">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        <span>Manajemen Tugas</span>
-                        <span class="badge bg-warning ms-2 small">New</span>
+                    <a href="<?= smart_url('guru/tugas') ?>" class="menu-link <?= $segment === 'tugas' ? 'active' : '' ?>">
+                        <i class="fa-solid fa-clipboard-list"></i> <span>Manajemen Tugas</span>
                     </a>
                 </li>
-            <?php elseif ($role === 'siswa'): ?>
-                <!-- SISWA -->
+
+            <?php endif; ?>
+
+
+            <!-- ==============================
+         SISWA MENU
+    =============================== -->
+            <?php if ($role === 'siswa'): ?>
+
                 <li>
                     <a href="<?= smart_url('siswa/profil') ?>" class="menu-link <?= $segment === 'profil' ? 'active' : '' ?>">
                         <i class="fa-solid fa-user-graduate"></i> <span>Profil</span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="#" class="dropdown-toggle <?= in_array($segment, ['scan-camera', 'riwayat', 'izin']) ? 'dropdown-open' : '' ?>">
+                        <i class="fa fa-qrcode"></i> <span>Absensi</span>
+                        <span class="chevron">▾</span>
+                    </a>
+
+                    <ul class="submenu <?= in_array($segment, ['scan-camera', 'riwayat', 'izin']) ? 'show' : '' ?>">
+                        <li><a href="<?= smart_url('absensi/scan-camera') ?>" class="<?= $segment === 'scan-camera' ? 'active' : '' ?>">Scan QR</a></li>
+                        <li><a href="<?= smart_url('absensi/riwayat') ?>" class="<?= $segment === 'riwayat' ? 'active' : '' ?>">Riwayat Absensi</a></li>
+                        <li><a href="<?= smart_url('absensi/izin/form') ?>" class="<?= $segment === 'izin' ? 'active' : '' ?>">Ajukan Izin</a></li>
+                    </ul>
+                </li>
+
             <?php endif; ?>
 
-            <!-- Logout always visible -->
+
+            <!-- LOGOUT -->
             <li>
                 <a href="<?= smart_url('logout') ?>" class="menu-link text-danger">
                     <i class="fa fa-sign-out-alt"></i> <span>Keluar</span>
                 </a>
             </li>
+
         </ul>
+
     </nav>
 
     <!-- Main Content -->
@@ -793,7 +788,6 @@ if ($total >= 2) {
     <!-- ======== JS GLOBAL ======== -->
 
     <!-- jQuery HARUS pertama -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -960,7 +954,12 @@ if ($total >= 2) {
 
         })();
     </script>
-
+    <script>
+        $(document).ready(function() {
+            console.log("jQuery status:", typeof $);
+            console.log("DataTables status:", typeof $.fn.DataTable);
+        });
+    </script>
     <?= $this->renderSection('scripts') ?>
 </body>
 

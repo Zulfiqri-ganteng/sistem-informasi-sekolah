@@ -37,6 +37,7 @@ class Filters extends BaseFilters
         'role'          => RoleFilter::class,
         'removeindex'   => RemoveIndex::class,
         'admin' => \App\Filters\RoleFilter::class,
+        'absensiRole' => \App\Filters\AbsensiRoleFilter::class,
     ];
 
     /**
@@ -48,7 +49,7 @@ class Filters extends BaseFilters
             // 'csrf', // aktifkan CSRF global
         ],
         'after' => [
-            'toolbar',
+            
         ],
     ];
 

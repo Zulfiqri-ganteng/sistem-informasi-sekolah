@@ -35,17 +35,16 @@ class Dashboard extends BaseController
         }
 
         // --- TABUNGAN (existing data) ---
-        // fallback jurusan sample (tidak dipakai bila ada jurusan dari DB)
-        $jurusanList = ['TKJ', 'RPL', 'MM', 'AKL', 'OTKP'];
-        // isi kelasList lewat helper agar dropdown tersedia di view
-        $kelasList = $this->getKelas();
+        // keep defaults only as fallback; we'll load real jurusan/kelas from DB
+        $jurusanList = $this->getJurusan();
+        // map jurusan rows to simple array
+        $jurusanList = array_map(fn($r) => $r['jurusan'], $jurusanList);
+        $kelasList = $this->getKelas(); // load kelas+jurusan for initial server-render
 
-        $jumlahSiswa = (int) $this->db->table('siswa')->countAllResults();
-        $jumlahGuru  = (int) $this->db->table('guru')->countAllResults();
-        $jumlahKelas = (int) $this->db->table('kelas')->countAllResults();
-
-        $totalTabunganRow = $this->db->table('tabungan')->selectSum('saldo')->get()->getRow();
-        $totalTabungan = $totalTabunganRow->saldo ?? 0;
+        $jumlahSiswa = $this->db->table('siswa')->countAllResults();
+        $jumlahGuru  = $this->db->table('guru')->countAllResults();
+        $jumlahKelas = $this->db->table('kelas')->countAllResults();
+        $totalTabungan = $this->db->table('tabungan')->selectSum('saldo')->get()->getRow()->saldo ?? 0;
 
         $bulan = date('m');
         $tahun = date('Y');
@@ -65,13 +64,9 @@ class Dashboard extends BaseController
             ORDER BY bulan ASC
         ");
         $chartRows = $chartQuery->getResultArray();
-        // ensure 12 entries (index 0..11)
-        $chartData = array_fill(0, 12, 0);
+        $chartData = array_fill(1, 12, 0);
         foreach ($chartRows as $r) {
-            $idx = (int)$r['bulan'] - 1;
-            if ($idx >= 0 && $idx < 12) {
-                $chartData[$idx] = (int)$r['total'];
-            }
+            $chartData[(int)$r['bulan']] = (int)$r['total'];
         }
 
         // top savers, perKelas, recentTransaksi, sparklines, etc.
@@ -96,11 +91,10 @@ class Dashboard extends BaseController
             ->limit(5)
             ->get()->getResultArray();
 
-        $penerimaanRow = $this->db->table('transaksi')
+        $penerimaanHari = $this->db->table('transaksi')
             ->select("SUM(IF(tipe='setor', jumlah, 0)) - SUM(IF(tipe='tarik', jumlah, 0)) AS total")
             ->where('DATE(created_at)', date('Y-m-d'))
-            ->get()->getRow();
-        $penerimaanHari = intval($penerimaanRow->total ?? 0);
+            ->get()->getRow()->total ?? 0;
 
         // sparklines (simple helpers)
         $sparkTransaksi = $this->getTransaksiPerHari();
@@ -110,26 +104,14 @@ class Dashboard extends BaseController
         $recentActivities = $this->getActivityTimeline();
 
         // --- ABSENSI (new merged part) ---
-        // Load distinct jurusan untuk dropdown (unique, non-empty)
-        $jurusanRows = $this->db->table('siswa')
-            ->select('jurusan')
-            ->where('jurusan IS NOT NULL')
-            ->groupBy('jurusan')
-            ->orderBy('jurusan', 'ASC')
-            ->get()->getResultArray();
-        $jurusanListFromDb = array_map(fn($r) => $r['jurusan'], $jurusanRows);
-        if (!empty($jurusanListFromDb)) {
-            $jurusanList = $jurusanListFromDb;
-        }
-
         // default filters from GET
         $jurusanFilter = $this->request->getGet('jurusan') ?? 'all';
         $kelasFilter = $this->request->getGet('kelas') ?? 'all';
 
-        // compute counts and initial rekap for server-render (first load)
+        // compute counts and initial rekap for server-render (first load) — will be refreshed with AJAX when user changes filter
         $today = date('Y-m-d');
 
-        // build base absensi query with optional joins/filters
+        // build base absensi query with optional joins/filters (optimized)
         $builder = $this->db->table('absensi a')
             ->select('a.*, s.nama as siswa_nama, s.kelas as siswa_kelas, s.jurusan as siswa_jurusan, g.nama as guru_nama')
             ->join('siswa s', "s.id = a.user_id AND a.user_type='siswa'", 'left')
@@ -139,34 +121,29 @@ class Dashboard extends BaseController
         if ($jurusanFilter !== 'all') {
             $builder->where('s.jurusan', $jurusanFilter);
         }
-        if ($kelasFilter !== 'all' && $kelasFilter !== '') {
+        if ($kelasFilter !== 'all') {
             $builder->where('s.kelas', $kelasFilter);
         }
 
         $rekapRaw = $builder->orderBy('a.jam_masuk', 'ASC')->get()->getResultArray();
 
-        // counts by status (single efficient query)
+        // counts by status (use single efficient query)
         $countBuilder = $this->db->table('absensi a')->select("a.status, COUNT(*) as cnt")->where('a.tanggal', $today);
 
-        if ($jurusanFilter !== 'all') {
-            $countBuilder->join('siswa s', 's.id = a.user_id', 'left')->where('s.jurusan', $jurusanFilter);
-        }
-        if ($kelasFilter !== 'all' && $kelasFilter !== '') {
-            $countBuilder->join('siswa s2', 's2.id = a.user_id', 'left')->where('s2.kelas', $kelasFilter);
-        }
+        if ($jurusanFilter !== 'all') $countBuilder->join('siswa s', 's.id = a.user_id', 'left')->where('s.jurusan', $jurusanFilter);
+        if ($kelasFilter !== 'all') $countBuilder->join('siswa s2', 's2.id = a.user_id', 'left')->where('s2.kelas', $kelasFilter);
 
         $statusRows = $countBuilder->groupBy('a.status')->get()->getResultArray();
         $counts = ['masuk' => 0, 'terlambat' => 0, 'izin' => 0, 'sakit' => 0, 'pulang_awal' => 0];
         foreach ($statusRows as $r) {
-            $key = $r['status'] ?? null;
-            if ($key !== null) $counts[$key] = (int)$r['cnt'];
+            $counts[$r['status']] = (int)$r['cnt'];
         }
 
-        // format rekap for view (server-render fallback; datatable will fetch via AJAX)
+        // format rekap for view
         $rekap = [];
         foreach ($rekapRaw as $r) {
-            $ownerName = ($r['user_type'] === 'guru') ? ($r['guru_nama'] ?? ('Guru-' . $r['user_id'])) : ($r['siswa_nama'] ?? ('Siswa-' . $r['user_id']));
-            $kelas = ($r['user_type'] === 'siswa') ? ($r['siswa_kelas'] ?? '-') : '-';
+            $ownerName = $r['user_type'] === 'guru' ? ($r['guru_nama'] ?? ('Guru-' . $r['user_id'])) : ($r['siswa_nama'] ?? ('Siswa-' . $r['user_id']));
+            $kelas = $r['user_type'] === 'siswa' ? ($r['siswa_kelas'] ?? '-') : '-';
             $rekap[] = [
                 'id' => $r['id'],
                 'nama' => $ownerName,
@@ -189,7 +166,7 @@ class Dashboard extends BaseController
             'jumlahKelas' => $jumlahKelas,
             'totalTabungan' => $totalTabungan,
             'transaksiBulan' => $transaksiBulan,
-            'chartData' => $chartData,
+            'chartData' => array_values($chartData),
             'topSavers' => $topSavers,
             'perKelas' => $perKelas,
             'recentTransaksi' => $recentTransaksi,
@@ -201,6 +178,7 @@ class Dashboard extends BaseController
             'recentActivities' => $recentActivities,
 
             // absensi
+            'jurusanList' => $jurusanList,
             'selectedJurusan' => $jurusanFilter,
             'selectedKelas' => $kelasFilter,
             'hadir' => $counts['masuk'],
@@ -214,17 +192,18 @@ class Dashboard extends BaseController
     }
 
     /**
-     * AJAX: return kelas list for a jurusan
+     * Public alias used by JS: /dashboard/kelas/{jurusan?}
      */
-    public function getKelasByJurusan($jurusan = null)
+    public function kelas($jurusan = null)
     {
+        // delegate to internal helper logic used previously
         $jurusan = urldecode($jurusan ?? $this->request->getGet('jurusan'));
         if (!$jurusan || $jurusan === 'all') {
-            // return unique kelas across all jurusan
-            $rows = $this->db->table('siswa')->select('kelas')->where('kelas IS NOT NULL')->groupBy('kelas')->orderBy('kelas', 'ASC')->get()->getResultArray();
+            $rows = $this->db->table('siswa')->select('kelas, jurusan')->where('kelas IS NOT NULL')->groupBy('kelas, jurusan')->orderBy('kelas', 'ASC')->get()->getResultArray();
         } else {
-            $rows = $this->db->table('siswa')->select('kelas')->where('jurusan', $jurusan)->where('kelas IS NOT NULL')->groupBy('kelas')->orderBy('kelas', 'ASC')->get()->getResultArray();
+            $rows = $this->db->table('siswa')->select('kelas, jurusan')->where('jurusan', $jurusan)->where('kelas IS NOT NULL')->groupBy('kelas, jurusan')->orderBy('kelas', 'ASC')->get()->getResultArray();
         }
+        // return array of kelas strings for backwards compatibility with existing JS
         $kelas = array_values(array_filter(array_map(fn($r) => $r['kelas'], $rows)));
         return $this->response->setJSON(['kelas' => $kelas]);
     }
@@ -242,13 +221,10 @@ class Dashboard extends BaseController
         // counts
         $countBuilder = $this->db->table('absensi a')->select("a.status, COUNT(*) as cnt")->where('a.tanggal', $today);
         if ($jurusan !== 'all') $countBuilder->join('siswa s', 's.id = a.user_id', 'left')->where('s.jurusan', $jurusan);
-        if ($kelas !== 'all' && $kelas !== '') $countBuilder->join('siswa s2', 's2.id = a.user_id', 'left')->where('s2.kelas', $kelas);
+        if ($kelas !== 'all') $countBuilder->join('siswa s2', 's2.id = a.user_id', 'left')->where('s2.kelas', $kelas);
         $statusRows = $countBuilder->groupBy('a.status')->get()->getResultArray();
         $counts = ['masuk' => 0, 'terlambat' => 0, 'izin' => 0, 'sakit' => 0, 'pulang_awal' => 0];
-        foreach ($statusRows as $r) {
-            $key = $r['status'] ?? null;
-            if ($key !== null) $counts[$key] = (int)$r['cnt'];
-        }
+        foreach ($statusRows as $r) $counts[$r['status']] = (int)$r['cnt'];
 
         // rekap rows
         $builder = $this->db->table('absensi a')
@@ -258,7 +234,7 @@ class Dashboard extends BaseController
             ->where('a.tanggal', $today);
 
         if ($jurusan !== 'all') $builder->where('s.jurusan', $jurusan);
-        if ($kelas !== 'all' && $kelas !== '') $builder->where('s.kelas', $kelas);
+        if ($kelas !== 'all') $builder->where('s.kelas', $kelas);
 
         $rows = $builder->orderBy('a.jam_masuk', 'ASC')->get()->getResultArray();
         $rekap = [];
@@ -284,7 +260,6 @@ class Dashboard extends BaseController
     }
 
     /* ---------------- helper functions ---------------- */
-
     private function getTransaksiPerHari()
     {
         $data = [];
@@ -345,13 +320,14 @@ class Dashboard extends BaseController
         return $rows;
     }
 
-    /**
-     * getJurusan() kept for compatibility (returns array of jurusan rows)
-     */
-    private function getJurusan()
+private function getJurusan()
     {
         $db = \Config\Database::connect();
 
+        // Query ini sudah benar, tetapi jika error tetap terjadi,
+        // kita paksa alias kolomnya untuk memastikan CodeIgniter tidak bingung.
+        // TETAP KAN menggunakan tabel siswa, karena berdasarkan screenshot Anda
+        // kolom 'jurusan' ada di tabel 'siswa'.
         return $db->table('siswa')
             ->select('jurusan')
             ->where('jurusan IS NOT NULL')
@@ -360,25 +336,37 @@ class Dashboard extends BaseController
             ->get()->getResultArray();
     }
 
-    /**
-     * getKelas() returns array of kelas rows. Each row may contain 'kelas' and optionally 'jurusan'
-     */
     private function getKelas()
     {
         $db = \Config\Database::connect();
 
-        // Ambil kelas unik dari tabel siswa (pasti sinkron)
-        $rows = $db->table('siswa')
+        // Cek apakah tabel kelas ada isinya
+        $kelasTable = $db->table('kelas')->countAllResults();
+
+        if ($kelasTable > 0) {
+            // Pakai tabel kelas kalau ada.
+            // **PERBAIKAN:** Kita asumsikan tabel 'kelas' HANYA punya 'nama_kelas' dan 'id'.
+            // Kolom 'jurusan' kemungkinan TIDAK ADA di tabel 'kelas' tetapi diminta di index.php,
+            // sehingga kita berikan nilai NULL sebagai 'jurusan' untuk mencegah error.
+            
+            // Jika tabel 'kelas' Anda memang memiliki kolom 'jurusan', ganti dengan:
+            // ->select('nama_kelas as kelas, jurusan')
+
+            // Jika tidak, gunakan:
+            return $db->table('kelas')
+                ->select('nama_kelas as kelas, NULL as jurusan') // <-- ASUMSI perbaikan: berikan nilai NULL untuk kolom 'jurusan' di tabel 'kelas'
+                ->orderBy('nama_kelas')
+                ->get()->getResultArray();
+        }
+
+        // Fallback ke tabel siswa (sudah benar dan memiliki kolom 'kelas' dan 'jurusan')
+        return $db->table('siswa')
             ->select('kelas, jurusan')
             ->where('kelas IS NOT NULL')
             ->groupBy('kelas, jurusan')
             ->orderBy('kelas')
-            ->get()
-            ->getResultArray();
-
-        return $rows;
+            ->get()->getResultArray();
     }
-
 
     public function transaksiAjax()
     {
@@ -415,11 +403,11 @@ class Dashboard extends BaseController
             ->join('guru g', 'g.id = a.user_id AND a.user_type="guru"', 'left')
             ->where('a.tanggal', date('Y-m-d'));
 
-        if ($filterJurusan && $filterJurusan !== 'all') {
+        if ($filterJurusan) {
             $builder->where('s.jurusan', $filterJurusan);
         }
 
-        if ($filterKelas && $filterKelas !== '') {
+        if ($filterKelas) {
             $builder->where('s.kelas', $filterKelas);
         }
 
@@ -431,14 +419,14 @@ class Dashboard extends BaseController
                 ->groupEnd();
         }
 
-        // Count total filtered (don't reset query)
+        // Count total filtered
         $countFiltered = $builder->countAllResults(false);
 
-        // Pagination (safe ints)
-        $builder->limit(intval($length), intval($start));
+        // Pagination
+        $builder->limit($length, $start);
         $results = $builder->get()->getResultArray();
 
-        // Format for datatables
+        // Format untuk datatables
         $data = [];
         foreach ($results as $r) {
             $nama = ($r['user_type'] === 'guru') ? $r['guru_nama'] : $r['siswa_nama'];

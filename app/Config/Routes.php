@@ -29,6 +29,12 @@ $routes->post('reset-password/(:any)', 'Auth::saveNewPassword/$1');
 $routes->get('/', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('dashboard/transaksiAjax', 'Dashboard::transaksiAjax');
+
+// untuk AJAX kelas per jurusan & absensi filter
+$routes->get('dashboard/kelas/(:segment)', 'Dashboard::getKelasByJurusan/$1');
+$routes->get('dashboard/kelas', 'Dashboard::getKelasByJurusan'); // fallback
+$routes->get('dashboard/absensiAjax', 'Dashboard::absensiAjax');
+
 // =====================
 // 🎓 SISWA
 // =====================
@@ -112,13 +118,6 @@ $routes->group('guru', ['filter' => 'auth'], static function ($routes) {
     $routes->get('chart-data', 'Guru::chartData');
 });
 
-
-
-
-
-
-
-
 // =====================
 // 📚 MATA PELAJARAN
 // =====================
@@ -129,12 +128,6 @@ $routes->group('mapel', ['filter' => 'auth'], static function ($routes) {
     $routes->post('save', 'Mapel::save');
     $routes->get('delete/(:num)', 'Mapel::delete/$1');
 });
-
-
-
-
-
-
 
 
 // =====================
@@ -195,49 +188,108 @@ $routes->group('laporan', ['filter' => 'auth'], static function ($routes) {
     $routes->get('export-word', 'Laporan::exportWord');
 });
 
-
-
 // Manajemen User (admin only)
 $routes->group('users', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Users::index');
     $routes->get('toggleStatus/(:num)', 'Users::toggleStatus/$1');
     $routes->get('reset/(:num)', 'Users::resetPassword/$1');
 });
-
-
-
-
-
-
-// absensi barcode (group)
-$routes->group('absensi', function ($routes) {
-
-    // FORM
-    $routes->get('generate', 'AbsensiBarcode::generateForm');
-    $routes->post('generate', 'AbsensiBarcode::generate');
-
-    // SINGLE QR
-    $routes->get('qrcode/(:num)', 'AbsensiBarcode::qrcode/$1');
-
-    // AJAX list
-    $routes->get('get-list/(:segment)', 'AbsensiBarcode::getList/$1');
-
-    // BUNDLE VIEW
-    $routes->get('qrcode-bundle', 'AbsensiBarcode::qrcodeBundle');
-
-    // DOWNLOAD ZIP
-    $routes->post('download-bundle', 'AbsensiBarcode::downloadBundle');
+/** ============================================
+ *  ABSENSI — HALAMAN RIWAYAT (semua role)
+ *  ============================================ */
+$routes->group('absensi', ['filter' => 'auth'], function ($routes) {
+    $routes->get('riwayat', 'Absensi\RiwayatController::index');
+    $routes->get('riwayatAjax', 'Absensi\RiwayatController::riwayatAjax'); // AJAX WAJIB
 });
 
 
+/** ============================================
+ *  ABSENSI --- ADMIN (full access)
+ *  ============================================ */
+$routes->group('absensi', ['filter' => 'absensiRole:admin'], function ($routes) {
+
+    $routes->get('success', 'Absensi\ScanController::success');
+
+    // SCAN QR
+    $routes->get('scan-camera', 'Absensi\ScanController::camera');   // buka kamera
+    $routes->get('scan', 'Absensi\ScanController::scan');            // hasil token
+    $routes->post('process-scan', 'Absensi\ScanController::processScan');
+
+    // DASHBOARD ABSENSI
+    $routes->get('dashboard', 'Absensi\DashboardController::index');
+
+    // GENERATE QR
+    $routes->get('generate', 'AbsensiBarcode::generateForm');
+    $routes->post('generate', 'AbsensiBarcode::generate');
+
+    $routes->get('qrcode/(:num)', 'AbsensiBarcode::qrcode/$1');
+    $routes->get('qrcode-bundle', 'AbsensiBarcode::qrcodeBundle');
+    $routes->post('download-bundle', 'AbsensiBarcode::downloadBundle');
+    $routes->get('get-list/(:segment)', 'AbsensiBarcode::getList/$1');
+});
 
 
+/** ============================================
+ *  ABSENSI --- GURU
+ *  ============================================ */
+$routes->group('absensi', ['filter' => 'absensiRole:guru'], function ($routes) {
+    $routes->get('success', 'Absensi\ScanController::success');
 
+    // SCAN QR
+    $routes->get('scan-camera', 'Absensi\ScanController::camera');
+    $routes->get('scan', 'Absensi\ScanController::scan');
+    $routes->post('process-scan', 'Absensi\ScanController::processScan');
+});
+
+
+/** ============================================
+ *  ABSENSI --- SISWA
+ *  ============================================ */
+$routes->group('absensi', ['filter' => 'absensiRole:siswa'], function ($routes) {
+
+    $routes->get('success', 'Absensi\ScanController::success');
+
+    // SCAN QR
+    $routes->get('scan-camera', 'Absensi\ScanController::camera');
+    $routes->get('scan', 'Absensi\ScanController::scan');
+    $routes->post('process-scan', 'Absensi\ScanController::processScan');
+});
+
+// Pastikan filter absensiRole:admin,guru mendukung multiple role (dipisahkan koma)
+// Rute umum Absensi (jika ada)
+$routes->get('absensi/rekapAjax', 'Absensi\DashboardController::rekapAjax');
+
+
+/** ============================================
+ * IZIN ABSENSI — ADMIN/GURU (Kelola Izin)
+ * URL: /absensi/izin/admin
+ * ============================================ */
+$routes->group('absensi/izin', ['filter' => 'absensiRole:admin,guru'], function ($routes) {
+    // Rute untuk menampilkan daftar izin yang perlu di-manage (URL: absensi/izin/admin)
+    $routes->get('admin', 'Absensi\IzinController::adminList');
+
+    // Rute untuk aksi approve dan reject yang dipanggil dari halaman adminList
+    $routes->post('approve/(:num)', 'Absensi\IzinController::approve/$1');
+    $routes->post('reject/(:num)', 'Absensi\IzinController::reject/$1');
+});
+
+
+/** ============================================
+ * IZIN ABSENSI — SISWA (Form Pengajuan)
+ * URL: /absensi/izin/form, /absensi/izin/submit
+ * ============================================ 
+ * Dikelompokkan terpisah untuk menghindari konflik filter dengan Admin/Guru.
+ */
+$routes->group('absensi/izin', ['filter' => 'absensiRole:siswa'], function ($routes) {
+    // Rute untuk form pengajuan izin (URL: absensi/izin/form)
+    $routes->get('form', 'Absensi\IzinController::form');
+    // Rute untuk submit form pengajuan
+    $routes->post('submit', 'Absensi\IzinController::submit');
+});
 
 // =====================
 // ⚙️ DEFAULTS
 // =====================
-// Hapus default Auth agar tidak loop redirect
 $routes->setDefaultController('Dashboard');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);

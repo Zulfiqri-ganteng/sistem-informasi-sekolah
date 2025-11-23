@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+    Options -Indexes
+    RewriteEngine On
+
+    # Fix masalah path pada Windows & XAMPP
+    RewriteBase /tabungan-smk/public/
+
+    # Jika file atau folder tidak ada → arahkan ke index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+# Amankan file sensitif
+<FilesMatch "\.(env|log|sql|json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
