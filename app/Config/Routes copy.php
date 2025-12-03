@@ -5,29 +5,21 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-
 // =======================
-//  CRONJOB ROUTES
+//  CRONJOB ROUTES (AMAN)
 // =======================
 $routes->get('cron/auto-pulang-ekskul', 'Absensi\ScanController::cronAutoPulang');
 
-// =======================
-// ACTIVITY LOGS (AMAN)
-// =======================
-$routes->get('activity', 'ActivityLogs::index', ['filter' => 'auth']);
+$routes->get('activity', 'ActivityLogs::index', ['filter' => 'auth']); // auth filter = your login check
 $routes->post('activity/ajaxList', 'ActivityLogs::ajaxList', ['filter' => 'auth']);
 $routes->get('activity/view/(:num)', 'ActivityLogs::view/$1', ['filter' => 'auth']);
 $routes->get('activity/export', 'ActivityLogs::exportCsv', ['filter' => 'auth']);
-
-// =======================
-// ADMIN GROUP
-// =======================
 $routes->group('admin', ['filter' => ['auth', 'activityLogger']], static function ($routes) {
 
     $routes->get('profil', 'Admin::profil');
     $routes->post('update-profil', 'Admin::updateProfil');
 
-    // Ganti Password Admin
+    // Ganti password admin
     $routes->get('ganti-password', 'Admin::gantiPassword');
     $routes->post('ganti-password', 'Admin::gantiPassword');
 
@@ -51,6 +43,7 @@ $routes->group('admin', ['filter' => ['auth', 'activityLogger']], static functio
     $routes->delete('pengaturan/hapus-libur/(:num)', 'Admin\JadwalController::deleteHariLibur/$1');
 });
 
+
 // ==================== AUTH ====================
 $routes->get('login', 'Auth::login');
 $routes->post('login', 'Auth::process');
@@ -58,30 +51,36 @@ $routes->get('logout', 'Auth::logout');
 
 $routes->get('register-siswa', 'Auth::registerSiswa');
 $routes->post('register-siswa', 'Auth::registerSubmit');
+// jika menggunakan route global (di luar group)
+// $routes->get('register-siswa', 'Auth::registerSiswa');
 $routes->post('register-siswa/submit', 'Auth::registerSubmit');
 
-// Lupa Password
+// 🔹 Lupa Password
 $routes->get('forgot-password', 'Auth::forgotPassword');
 $routes->post('forgot-password', 'Auth::sendResetLink');
 $routes->get('reset-password/(:any)', 'Auth::resetPassword/$1');
 $routes->post('reset-password/(:any)', 'Auth::saveNewPassword/$1');
 
+
 // =====================
-// DASHBOARD
+// 🏠 DASHBOARD
 // =====================
 $routes->get('/', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('dashboard/transaksiAjax', 'Dashboard::transaksiAjax');
+
+// untuk AJAX kelas per jurusan & absensi filter
 $routes->get('dashboard/kelas/(:segment)', 'Dashboard::getKelasByJurusan/$1');
-$routes->get('dashboard/kelas', 'Dashboard::getKelasByJurusan');
+$routes->get('dashboard/kelas', 'Dashboard::getKelasByJurusan'); // fallback
 $routes->get('dashboard/absensiAjax', 'Dashboard::absensiAjax');
 
-// ===================================================
-// 🎓 SISWA — (CRUD + AREA SISWA + IMPORT WIZARD)
-// ===================================================
+// =====================
+// 🎓 SISWA
+// =====================
+// ====================
+// 👨‍🎓 DATA SISWA (ADMIN)
+// ====================
 $routes->group('siswa', ['filter' => 'auth'], static function ($routes) {
-
-    // === CRUD DATA SISWA (ADMIN) ===
     $routes->get('/', 'Siswa::index');
     $routes->get('list', 'Siswa::list');
     $routes->post('save', 'Siswa::save');
@@ -90,44 +89,41 @@ $routes->group('siswa', ['filter' => 'auth'], static function ($routes) {
     $routes->get('options', 'Siswa::options');
     $routes->get('dropdown', 'Siswa::dropdown');
     $routes->get('search', 'Siswa::search');
+});
 
-    // === AREA SISWA ===
+// AREA SISWA
+// ===================
+$routes->group('siswa', ['filter' => 'auth'], static function ($routes) {
     $routes->get('dashboard', 'SiswaDashboard::dashboard');
     $routes->get('transaksi', 'SiswaDashboard::transaksi');
     $routes->get('profil', 'SiswaDashboard::profil');
     $routes->post('update-profil', 'SiswaDashboard::updateProfil');
+    // $routes->get('ganti-password', 'SiswaDashboard::gantiPassword');
     $routes->post('ganti-password', 'SiswaDashboard::gantiPasswordPost');
-    $routes->get('tabungan', 'Siswa\Tabungan::index');
+    $routes->get('tabungan', 'Siswa\Tabungan::index'); // 👈 ini yang hilang
 
-    // === IMPORT WIZARD ===
-    $routes->get('import', 'Import\SiswaImport::index');
-
-    // Template (DUA ALIAS)
-    $routes->get('template', 'Import\SiswaImport::downloadTemplate');
+    $routes->get('import', 'Import\SiswaImport::index');             // page wizard
     $routes->get('import/template', 'Import\SiswaImport::downloadTemplate');
-
-    // Preview (DUA ALIAS)
-    $routes->post('import/preview', 'Import\SiswaImport::preview');
-    $routes->post('importPreview', 'Import\SiswaImport::preview');
-
-    // Finalize (DUA ALIAS)
-    $routes->post('import/finalize', 'Import\SiswaImport::finalize');
-    $routes->post('importSave', 'Import\SiswaImport::finalize');
+    $routes->post('import/preview', 'Import\SiswaImport::preview');  // AJAX preview (POST)
+    $routes->post('import/finalize', 'Import\SiswaImport::finalize'); // AJAX finalize (POST)
 });
 
-// ===================================================
-// GURU CRUD
-// ===================================================
+
+// =====================
+// ⚙️ ADMIN PROFIL & PASSWORD
+// =====================
+
+// =============== ADMIN: CRUD DATA GURU ==================
 $routes->group('admin/guru', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('/', 'GuruController::index');
-    $routes->get('list', 'GuruController::list');
-    $routes->get('get/(:num)', 'GuruController::get/$1');
-    $routes->post('save', 'GuruController::save');
+
+    $routes->get('/', 'GuruController::index');           // halaman utama CRUD guru
+    $routes->get('list', 'GuruController::list');         // ajax datatables
+    $routes->get('get/(:num)', 'GuruController::get/$1'); // ambil data edit
+    $routes->post('save', 'GuruController::save');        // tambah & edit guru
     $routes->get('delete/(:num)', 'GuruController::delete/$1');
     $routes->get('getMapel', 'GuruController::getMapel');
 });
-
-// =============== GURU AREA ===============
+// ================= GURU =====================
 $routes->group('guru', ['filter' => 'auth'], static function ($routes) {
 
     $routes->get('/', 'Guru::index');
@@ -137,22 +133,30 @@ $routes->group('guru', ['filter' => 'auth'], static function ($routes) {
     $routes->get('kelas/(:num)', 'Guru::siswa/$1');
 
     $routes->get('siswa/(:num)', 'Guru::siswaGet/$1');
+
     $routes->get('getSiswaKelas', 'Guru::getSiswaKelas');
     $routes->get('transaksi/list', 'Guru::transaksiList');
 
+    // ================= TRANSAKSI =================
     $routes->post('transaksi/create', 'GuruTransaksi::create');
-
+    // PROFIL
     $routes->get('profil', 'Guru::profil');
     $routes->post('profil/update', 'Guru::updateProfil');
+
+    // GANTI PASSWORD
     $routes->get('ganti-password', 'Guru::gantiPassword');
     $routes->post('ganti-password', 'Guru::updatePassword');
-    $routes->post('guru/update-profil', 'Guru::updateProfil');
+    $routes->get('profil', 'Guru\ProfilController::index');
+    $routes->get('profil', 'Guru::profil');
+    $routes->post('update-profil', 'Guru::updateProfil');
 
+    // $routes->post('update-profil', 'Guru\ProfilController::updateProfil');
+    $routes->post('guru/update-profil', 'Guru::updateProfil');
     $routes->get('chart-data', 'Guru::chartData');
 });
 
 // =====================
-// MAPEL
+// 📚 MATA PELAJARAN
 // =====================
 $routes->group('mapel', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/', 'Mapel::index');
@@ -162,8 +166,9 @@ $routes->group('mapel', ['filter' => 'auth'], static function ($routes) {
     $routes->get('delete/(:num)', 'Mapel::delete/$1');
 });
 
+
 // =====================
-// KELAS
+// 🏫 KELAS
 // =====================
 $routes->group('kelas', ['filter' => 'auth'], static function ($routes) {
 
@@ -174,22 +179,23 @@ $routes->group('kelas', ['filter' => 'auth'], static function ($routes) {
     $routes->get('get/(:num)', 'Kelas::get/$1');
     $routes->get('getGuruDropdown', 'Kelas::getGuruDropdown');
 
+    // endpoint siswa per kelas
     $routes->get('siswa/(:num)', 'Kelas::siswa/$1');
 });
 
-// =====================
-// JURUSAN
-// =====================
+// ====================
+// 🎓 JURUSAN
+// ====================
 $routes->group('jurusan', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/', 'Jurusan::index');
     $routes->get('list', 'Jurusan::list');
-    $routes->get('get/(:num)', 'Jurusan::get/$1');
-    $routes->post('save', 'Jurusan::save');
-    $routes->get('delete/(:num)', 'Jurusan::delete/$1');
+    $routes->get('get/(:num)', 'Jurusan::get/$1');       // ✅ route untuk tombol edit (ambil data)
+    $routes->post('save', 'Jurusan::save');              // ✅ route untuk tambah/update
+    $routes->get('delete/(:num)', 'Jurusan::delete/$1'); // ✅ route untuk hapus
 });
 
 // =====================
-// TABUNGAN
+// 💰 TABUNGAN
 // =====================
 $routes->group('tabungan', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Tabungan::index');
@@ -203,117 +209,173 @@ $routes->group('tabungan', ['filter' => 'auth'], function ($routes) {
 });
 
 // =====================
-// LAPORAN TABUNGAN
+// 📊 LAPORAN
 // =====================
+// ========================
+// LAPORAN TABUNGAN (group + filter)
 $routes->group('laporan', ['filter' => 'auth'], static function ($routes) {
 
     $routes->get('/', 'Laporan::index');
     $routes->get('data', 'Laporan::data');
     $routes->get('detail/(:num)', 'Laporan::detail/$1');
 
+    // EXPORT FIX
     $routes->get('export-excel', 'Laporan::exportExcel');
     $routes->get('export-pdf', 'Laporan::exportPdf');
     $routes->get('export-word', 'Laporan::exportWord');
 });
-
-// =====================
-// LAPORAN ABSENSI
-// =====================
+// LAPORAN ABSENSI (Harian + Ekskul)
+// LAPORAN ABSENSI (Harian + Ekskul)
 $routes->group('absensi/laporan', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Absensi\LaporanController::index');
     $routes->post('hasil', 'Absensi\LaporanController::hasil');
 
+    // Ekskul Bulanan (view + export)
     $routes->get('ekskulBulanan', 'Absensi\LaporanController::ekskulBulanan');
     $routes->get('ekskulBulananPdf', 'Absensi\LaporanController::ekskulBulananPdf');
 
+    // existing export placeholders
     $routes->get('export-pdf', 'Absensi\LaporanController::exportPdf');
     $routes->get('export-word', 'Absensi\LaporanController::exportWord');
     $routes->get('export-excel', 'Absensi\LaporanController::exportExcel');
 });
 
-// =====================
-// USER MANAGEMENT
-// =====================
+// Manajemen User (admin only)
 $routes->group('users', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Users::index');
     $routes->get('toggleStatus/(:num)', 'Users::toggleStatus/$1');
     $routes->get('reset/(:num)', 'Users::resetPassword/$1');
 });
-
-// =====================
-// ABSENSI RIWAYAT (ALL ROLES)
-// =====================
+/** ============================================
+ *  ABSENSI — HALAMAN RIWAYAT (semua role)
+ *  ============================================ */
 $routes->group('absensi', ['filter' => 'auth'], function ($routes) {
     $routes->get('riwayat', 'Absensi\RiwayatController::index');
-    $routes->get('riwayatAjax', 'Absensi\RiwayatController::riwayatAjax');
+    $routes->get('riwayatAjax', 'Absensi\RiwayatController::riwayatAjax'); // AJAX WAJIB
 });
 
-// =====================
-// ABSENSI ADMIN
-// =====================
+
+/** ============================================
+ *  ABSENSI --- ADMIN (full access)
+ *  ============================================ */
 $routes->group('absensi', ['filter' => 'absensiRole:admin'], function ($routes) {
 
     $routes->get('success', 'Absensi\ScanController::success');
-    $routes->get('scan-camera', 'Absensi\ScanController::camera');
-    $routes->get('scan', 'Absensi\ScanController::scan');
+
+    // SCAN QR
+    $routes->get('scan-camera', 'Absensi\ScanController::camera');   // buka kamera
+    $routes->get('scan', 'Absensi\ScanController::scan');            // hasil token
     $routes->post('process-scan', 'Absensi\ScanController::processScan');
 
+    // DASHBOARD ABSENSI
     $routes->get('dashboard', 'Absensi\DashboardController::index');
 
+    // GENERATE QR
     $routes->get('generate', 'AbsensiBarcode::generateForm');
     $routes->post('generate', 'AbsensiBarcode::generate');
+
     $routes->get('qrcode/(:num)', 'AbsensiBarcode::qrcode/$1');
     $routes->get('qrcode-bundle', 'AbsensiBarcode::qrcodeBundle');
     $routes->post('download-bundle', 'AbsensiBarcode::downloadBundle');
     $routes->get('get-list/(:segment)', 'AbsensiBarcode::getList/$1');
 });
 
-// =====================
-// ABSENSI GURU
-// =====================
+
+/** ============================================
+ *  ABSENSI --- GURU
+ *  ============================================ */
 $routes->group('absensi', ['filter' => 'absensiRole:guru'], function ($routes) {
     $routes->get('success', 'Absensi\ScanController::success');
+
+    // SCAN QR
     $routes->get('scan-camera', 'Absensi\ScanController::camera');
     $routes->get('scan', 'Absensi\ScanController::scan');
     $routes->post('process-scan', 'Absensi\ScanController::processScan');
 });
 
-// =====================
-// ABSENSI SISWA
-// =====================
+
+/** ============================================
+ *  ABSENSI --- SISWA
+ *  ============================================ */
 $routes->group('absensi', ['filter' => 'absensiRole:siswa'], function ($routes) {
+
     $routes->get('success', 'Absensi\ScanController::success');
+
+    // SCAN QR
     $routes->get('scan-camera', 'Absensi\ScanController::camera');
     $routes->get('scan', 'Absensi\ScanController::scan');
     $routes->post('process-scan', 'Absensi\ScanController::processScan');
 });
 
-// =====================
-// IZIN (ADMIN + GURU)
-// =====================
+// Pastikan filter absensiRole:admin,guru mendukung multiple role (dipisahkan koma)
+// Rute umum Absensi (jika ada)
+$routes->get('absensi/rekapAjax', 'Absensi\DashboardController::rekapAjax');
+
+
+/** ============================================
+ * IZIN ABSENSI — ADMIN/GURU (Kelola Izin)
+ * URL: /absensi/izin/admin
+ * ============================================ */
 $routes->group('absensi/izin', ['filter' => 'absensiRole:admin,guru'], function ($routes) {
+    // Rute untuk menampilkan daftar izin yang perlu di-manage (URL: absensi/izin/admin)
     $routes->get('admin', 'Absensi\IzinController::adminList');
+
+    // Rute untuk aksi approve dan reject yang dipanggil dari halaman adminList
     $routes->post('approve/(:num)', 'Absensi\IzinController::approve/$1');
     $routes->post('reject/(:num)', 'Absensi\IzinController::reject/$1');
 });
 
-// =====================
-// IZIN SISWA
-// =====================
+
+/** ============================================
+ * IZIN ABSENSI — SISWA (Form Pengajuan)
+ * URL: /absensi/izin/form, /absensi/izin/submit
+ * ============================================ 
+ * Dikelompokkan terpisah untuk menghindari konflik filter dengan Admin/Guru.
+ */
 $routes->group('absensi/izin', ['filter' => 'absensiRole:siswa'], function ($routes) {
+    // Rute untuk form pengajuan izin (URL: absensi/izin/form)
     $routes->get('form', 'Absensi\IzinController::form');
+    // Rute untuk submit form pengajuan
     $routes->post('submit', 'Absensi\IzinController::submit');
 });
 
-// =====================
-// EKSKUL
-// =====================
+// ekskul routes
 $routes->group('ekskul', ['filter' => 'auth'], function ($routes) {
+    // Controller yang dicari CodeIgniter: app/Controllers/Ekskul/EkskulController.php
+
+    // 1. GET /ekskul -> Menampilkan daftar ekskul (index)
     $routes->get('/', 'Ekskul\EkskulController::index');
+
+    // 2. POST /ekskul/save -> Menyimpan atau memperbarui data Ekskul Master
     $routes->post('save', 'Ekskul\EkskulController::save');
+
+    // 3. GET /ekskul/delete/1 -> Menghapus Ekskul Master berdasarkan ID (menggunakan GET, sesuai format awal Anda)
     $routes->get('delete/(:num)', 'Ekskul\EkskulController::delete/$1');
+
+    // --- LOGIKA JADWAL EKSTRAKURIKULER ---
+
+    // 4. POST /ekskul/saveJadwal -> Menyimpan/Memperbarui data Jadwal. 
+    //    Ini menggantikan 'addJadwal' yang lama dan menggunakan nama Controller yang benar.
     $routes->post('saveJadwal', 'Ekskul\EkskulController::saveJadwal');
+
+    // 5. GET /ekskul/deleteJadwal/1 -> Menghapus Jadwal berdasarkan ID (menggunakan GET)
     $routes->get('deleteJadwal/(:num)', 'Ekskul\EkskulController::deleteJadwal/$1');
+
+    // CATATAN: Baris rute yang salah di versi Anda (`$routes->post('saveJadwal', 'Ekskul\Ekstrakurikuler::saveJadwal');` dan dua baris di bawahnya) SUDAH SAYA HAPUS.
+});
+
+// Activity Logs Routes
+$routes->get('activity', 'ActivityLogs::index');
+$routes->post('activity/ajaxList', 'ActivityLogs::ajaxList');
+$routes->get('activity/view/(:num)', 'ActivityLogs::view/$1');
+$routes->get('activity/exportCsv', 'ActivityLogs::exportCsv');
+$routes->get('activity/getStats', 'ActivityLogs::getStats');
+
+// Maintenance Routes (Admin Only) - REKOMENDASI: gunakan camelCase
+$routes->group('maintenance', ['filter' => 'role:admin'], function ($routes) {
+    $routes->get('cleanLog', 'Maintenance::cleanLog');
+    $routes->get('cleanAll', 'Maintenance::cleanAll');
+    $routes->get('getLogCount', 'Maintenance::getLogCount');
 });
 
 $routes->group('ekskul/anggota', function ($routes) {
@@ -325,16 +387,7 @@ $routes->group('ekskul/anggota', function ($routes) {
 });
 
 // =====================
-// MAINTENANCE
-// =====================
-$routes->group('maintenance', ['filter' => 'role:admin'], function ($routes) {
-    $routes->get('cleanLog', 'Maintenance::cleanLog');
-    $routes->get('cleanAll', 'Maintenance::cleanAll');
-    $routes->get('getLogCount', 'Maintenance::getLogCount');
-});
-
-// =====================
-// DEFAULTS
+// ⚙️ DEFAULTS
 // =====================
 $routes->setDefaultController('Dashboard');
 $routes->setDefaultMethod('index');

@@ -28,22 +28,22 @@
         --glass-bg: rgba(255, 255, 255, 0.1);
         --glass-border: rgba(255, 255, 255, 0.2);
         --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        --transition: all 0.25s ease;
+        --transition: all 0.3s ease;
     }
 
     .scan-container {
-        max-width: 900px;
-        margin: 1.8rem auto;
+        max-width: 800px;
+        margin: 2rem auto;
         padding: 0 1rem;
     }
 
     .scan-card {
         background: var(--dark-gradient);
-        padding: 1.8rem;
-        border-radius: 18px;
+        padding: 2rem;
+        border-radius: 20px;
         color: white;
         box-shadow: var(--glass-shadow);
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(10px);
         border: 1px solid var(--glass-border);
         position: relative;
         overflow: hidden;
@@ -52,25 +52,25 @@
     .scan-card::before {
         content: '';
         position: absolute;
-        top: -45%;
-        left: -45%;
+        top: -50%;
+        left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
         z-index: 0;
-        pointer-events: none;
     }
 
     .scan-header {
+        position: relative;
         z-index: 1;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .scan-title {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
         background: linear-gradient(45deg, #fff, #a8edea);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -78,7 +78,7 @@
     }
 
     .scan-subtitle {
-        font-size: 0.95rem;
+        font-size: 1rem;
         opacity: 0.9;
         color: #e0f7fa;
     }
@@ -86,18 +86,18 @@
     .camera-section {
         position: relative;
         z-index: 1;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .camera-box {
         width: 100%;
         aspect-ratio: 1;
-        background: rgba(0, 0, 0, 0.28);
-        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
         overflow: hidden;
         position: relative;
-        border: 2px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
     #video {
@@ -114,23 +114,48 @@
         transform: translate(-50%, -50%);
         width: 70%;
         height: 70%;
-        border-radius: 12px;
-        border: 3px solid rgba(0, 255, 180, 0.85);
-        box-shadow: 0 0 30px rgba(0, 255, 160, 0.22);
+        border-radius: 16px;
+        border: 3px solid rgba(0, 255, 180, 0.8);
+        box-shadow: 0 0 40px rgba(0, 255, 160, 0.3);
         pointer-events: none;
-        z-index: 2;
+        animation: pulse 2s infinite;
+    }
+
+    .scan-overlay::before,
+    .scan-overlay::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #00ffb4;
+    }
+
+    .scan-overlay::before {
+        top: -3px;
+        left: -3px;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 12px 0 0 0;
+    }
+
+    .scan-overlay::after {
+        bottom: -3px;
+        right: -3px;
+        border-left: none;
+        border-top: none;
+        border-radius: 0 0 12px 0;
     }
 
     .status-indicator {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: .6rem;
-        margin: .9rem 0;
-        padding: .65rem;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        gap: 0.5rem;
+        margin: 1rem 0;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .status-dot {
@@ -138,7 +163,7 @@
         height: 10px;
         border-radius: 50%;
         background: #ff4757;
-        animation: blink 1.6s infinite;
+        animation: blink 1.5s infinite;
     }
 
     .status-dot.active {
@@ -147,33 +172,33 @@
     }
 
     .status-message {
-        font-size: .92rem;
+        font-size: 0.9rem;
         font-weight: 500;
     }
 
     .controls {
         display: flex;
-        gap: .6rem;
+        gap: 0.75rem;
         justify-content: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         flex-wrap: wrap;
     }
 
     .btn-scan {
-        padding: .6rem 1.1rem;
-        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
         border: none;
         font-weight: 600;
         transition: var(--transition);
         display: flex;
         align-items: center;
-        gap: .5rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .btn-scan:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
 
     .btn-primary-scan {
@@ -192,78 +217,79 @@
     }
 
     .btn-outline-scan {
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.1);
         color: white;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
     }
 
     .notification-area {
-        min-height: 54px;
+        min-height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: .6rem;
+        margin-bottom: 1rem;
     }
 
     .scan-toast {
-        padding: .6rem 1rem;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         color: white;
         font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         display: flex;
         align-items: center;
-        gap: .5rem;
-        max-width: 86%;
+        gap: 0.5rem;
+        max-width: 80%;
         text-align: center;
     }
 
     .scan-toast.success {
-        background: rgba(46, 213, 115, 0.12);
-        border-color: rgba(46, 213, 115, 0.22);
+        background: rgba(46, 213, 115, 0.2);
+        border-color: rgba(46, 213, 115, 0.4);
     }
 
     .scan-toast.error {
-        background: rgba(255, 71, 87, 0.12);
-        border-color: rgba(255, 71, 87, 0.22);
+        background: rgba(255, 71, 87, 0.2);
+        border-color: rgba(255, 71, 87, 0.4);
     }
 
     .scan-toast.info {
-        background: rgba(52, 152, 219, 0.12);
-        border-color: rgba(52, 152, 219, 0.22);
+        background: rgba(52, 152, 219, 0.2);
+        border-color: rgba(52, 152, 219, 0.4);
     }
 
     .footer-note {
         text-align: center;
-        font-size: .82rem;
-        color: rgba(255, 255, 255, 0.72);
-        margin-top: .9rem;
-        padding: .8rem;
-        background: rgba(0, 0, 0, 0.14);
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .camera-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: .45rem;
-        font-size: .82rem;
-        color: rgba(255, 255, 255, 0.72);
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
     }
 
+    /* Animations */
     @keyframes pulse {
         0% {
-            box-shadow: 0 0 0 0 rgba(0, 255, 160, 0.35);
+            box-shadow: 0 0 0 0 rgba(0, 255, 160, 0.4);
         }
 
         70% {
-            box-shadow: 0 0 0 6px rgba(0, 255, 160, 0);
+            box-shadow: 0 0 0 10px rgba(0, 255, 160, 0);
         }
 
         100% {
@@ -275,21 +301,21 @@
 
         0%,
         100% {
-            opacity: 1
+            opacity: 1;
         }
 
         50% {
-            opacity: .45
+            opacity: 0.5;
         }
     }
 
     @keyframes scan-line {
         0% {
-            top: 8%
+            top: 10%;
         }
 
         100% {
-            top: 92%
+            top: 90%;
         }
     }
 
@@ -299,26 +325,28 @@
         width: 100%;
         background: linear-gradient(90deg, transparent, #00ffb4, transparent);
         top: 10%;
-        animation: scan-line 3s linear infinite;
-        z-index: 2;
+        animation: scan-line 2s linear infinite;
+        z-index: 1;
     }
 
-    /* Responsive */
-    @media (max-width:768px) {
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .scan-container {
-            padding: 0 .6rem;
+            margin: 1rem auto;
+            padding: 0 0.5rem;
         }
 
         .scan-card {
-            padding: 1.4rem;
+            padding: 1.5rem;
         }
 
         .scan-title {
-            font-size: 1.35rem;
+            font-size: 1.5rem;
         }
 
         .controls {
             flex-direction: column;
+            align-items: center;
         }
 
         .btn-scan {
@@ -327,13 +355,17 @@
         }
     }
 
-    @media (max-width:480px) {
-        .camera-box {
-            aspect-ratio: 0.95;
+    @media (max-width: 480px) {
+        .scan-card {
+            padding: 1rem;
         }
 
         .scan-title {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
+        }
+
+        .camera-box {
+            aspect-ratio: 0.9;
         }
     }
 </style>
@@ -351,12 +383,12 @@
             <div class="camera-box" id="cameraBox">
                 <video id="video" playsinline muted></video>
                 <div class="scan-overlay" aria-hidden="true"></div>
-                <div class="scan-line" aria-hidden="true"></div>
+                <div class="scan-line"></div>
             </div>
 
             <div class="camera-info">
                 <span id="cameraLabel">Kamera: Menunggu inisialisasi</span>
-                <span id="fpsCounter">— FPS</span>
+                <span id="fpsCounter">0 FPS</span>
             </div>
         </div>
 
@@ -366,9 +398,15 @@
         </div>
 
         <div class="controls">
-            <button id="startBtn" class="btn-scan btn-success-scan"><i class="fas fa-play"></i> Mulai Scan</button>
-            <button id="swapBtn" class="btn-scan btn-outline-scan"><i class="fas fa-sync-alt"></i> Ganti Kamera</button>
-            <button id="stopBtn" class="btn-scan btn-danger-scan"><i class="fas fa-stop"></i> Hentikan</button>
+            <button id="startBtn" class="btn-scan btn-success-scan">
+                <i class="fas fa-play"></i> Mulai Scan
+            </button>
+            <button id="swapBtn" class="btn-scan btn-outline-scan">
+                <i class="fas fa-sync-alt"></i> Ganti Kamera
+            </button>
+            <button id="stopBtn" class="btn-scan btn-danger-scan">
+                <i class="fas fa-stop"></i> Hentikan
+            </button>
         </div>
 
         <div class="notification-area" id="notifArea"></div>
@@ -401,48 +439,58 @@
     let availableCameras = [];
     let cameraIndex = 0;
     let usingFront = true;
-    let lastDecodeAt = 0;
-    let fpsIntervalId = null;
-    let lastFpsUpdate = performance.now();
-    let framesSinceLast = 0;
+    let fps = 0;
+    let lastScanTime = 0;
 
-    // Lightweight toast - replace content only when different
-    let lastToast = '';
-
-    function showToast(message, type = 'info') {
-        if (message === lastToast) return; // avoid reflowing same toast multiple times
-        lastToast = message;
-        const toastClass = `scan-toast ${type}`;
-        notifArea.innerHTML = `<div class="${toastClass}"><i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i> ${message}</div>`;
-        const duration = type === 'error' ? 4500 : 2600;
-        setTimeout(() => {
-            if (notifArea.firstChild && notifArea.firstChild.textContent.trim() === message.trim()) {
-                notifArea.innerHTML = '';
-                lastToast = '';
-            }
-        }, duration);
+    // Update FPS counter
+    function updateFPS() {
+        const now = performance.now();
+        if (lastScanTime > 0) {
+            fps = Math.round(1000 / (now - lastScanTime));
+        }
+        lastScanTime = now;
+        fpsCounter.textContent = `${fps} FPS`;
     }
 
     function showStatus(message, type = 'info') {
         statusMessage.textContent = message;
+
+        // Update status dot
         statusDot.className = 'status-dot';
         if (type === 'success') {
             statusDot.classList.add('active');
         } else if (type === 'error') {
-            statusDot.style.animation = 'blink 0.8s infinite';
+            statusDot.style.animation = 'blink 0.5s infinite';
         } else {
-            statusDot.style.animation = 'blink 1.6s infinite';
+            statusDot.style.animation = 'blink 1.5s infinite';
         }
+    }
+
+    function showToast(message, type = 'info') {
+        const toastClass = `scan-toast ${type}`;
+        notifArea.innerHTML = `
+            <div class="${toastClass}">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            </div>
+        `;
+
+        // Auto hide after 3 seconds for success/info, 5 seconds for errors
+        const duration = type === 'error' ? 5000 : 3000;
+        setTimeout(() => {
+            if (notifArea.innerHTML.includes(message)) {
+                notifArea.innerHTML = '';
+            }
+        }, duration);
     }
 
     async function listCameras() {
         try {
             const cams = await QrScanner.listCameras(true);
-            availableCameras = cams || [];
-            return availableCameras;
+            availableCameras = cams;
+            return cams;
         } catch (e) {
-            console.debug('listCameras error', e);
-            availableCameras = [];
+            console.error('Error listing cameras:', e);
             return [];
         }
     }
@@ -461,30 +509,6 @@
         }
     }
 
-    function updateFpsCounter() {
-        const now = performance.now();
-        const delta = now - lastFpsUpdate;
-        const fps = Math.round((framesSinceLast / (delta / 1000)) || 0);
-        fpsCounter.textContent = fps ? `${fps} FPS` : '— FPS';
-        lastFpsUpdate = now;
-        framesSinceLast = 0;
-    }
-
-    function startFpsTicker() {
-        if (fpsIntervalId) return;
-        lastFpsUpdate = performance.now();
-        framesSinceLast = 0;
-        fpsIntervalId = setInterval(updateFpsCounter, 800);
-    }
-
-    function stopFpsTicker() {
-        if (fpsIntervalId) {
-            clearInterval(fpsIntervalId);
-            fpsIntervalId = null;
-            fpsCounter.textContent = '— FPS';
-        }
-    }
-
     async function startScanner() {
         if (!window.QrScanner) {
             showStatus('Library QR tidak ditemukan.', 'error');
@@ -492,23 +516,19 @@
             return;
         }
 
-        // Stop any previous scanner cleanly
         if (scanner) {
             try {
                 await scanner.stop();
             } catch (e) {
-                console.debug('stop error', e);
+                console.error('Error stopping scanner:', e);
             }
             scanner = null;
-            stopFpsTicker();
         }
 
         showStatus('Menyiapkan kamera...');
 
         try {
             await listCameras();
-
-            // prefer deviceId based on label or fallback to facing mode
             let pref = usingFront ? 'user' : 'environment';
             let prefDevice = null;
 
@@ -530,125 +550,81 @@
                     prefDevice = availableCameras[0].id;
                     cameraIndex = 0;
                 }
+
+                // Update camera label
                 cameraLabel.textContent = `Kamera: ${availableCameras[cameraIndex].label || 'Unknown'}`;
             } else {
                 cameraLabel.textContent = 'Kamera: Default';
             }
 
-            // Use constraints to request a lighter resolution by default (helps low-end devices)
-            const constraints = {
-                audio: false,
-                video: {
-                    width: {
-                        ideal: 640
-                    },
-                    height: {
-                        ideal: 360
-                    },
-                    facingMode: usingFront ? 'user' : 'environment'
-                }
-            };
+            scanner = new QrScanner(
+                videoElem,
+                result => {
+                    updateFPS();
 
-            // Create scanner with optimized settings
-            scanner = new QrScanner(videoElem, result => {
-                // counting frames for FPS ticker
-                framesSinceLast++;
+                    let text = (typeof result === 'string') ? result :
+                        (result && (result.data || result.rawValue || result.text || result.data?.data));
 
-                // throttle rapid duplicate decodes: ignore if within 700ms
-                const now = performance.now();
-                if (now - lastDecodeAt < 700) return;
-                lastDecodeAt = now;
+                    if (!text) return;
 
-                let text = (typeof result === 'string') ? result : (result && (result.data || result.rawValue || result.text || result.data?.data));
-                if (!text) return;
+                    const token = parseTokenFromText(String(text));
+                    if (!token) {
+                        showToast('QR Code tidak valid atau tidak mengandung token absensi', 'error');
+                        return;
+                    }
 
-                const token = parseTokenFromText(String(text));
-                if (!token) {
-                    showToast('QR Code tidak valid atau tidak mengandung token', 'error');
-                    return;
-                }
-
-                // feedback
-                try {
+                    // Play beep sound
                     if (beepSound) {
                         beepSound.currentTime = 0;
                         beepSound.volume = 0.7;
-                        beepSound.play().catch(() => {});
+                        beepSound.play().catch(() => {
+                            // Fallback if audio fails
+                            console.log('Beep sound failed to play');
+                        });
                     }
-                } catch (e) {}
-                showStatus('QR Code terdeteksi!', 'success');
-                showToast('QR Code berhasil dipindai. Mengarahkan...', 'success');
 
-                // stop scanner and redirect shortly
-                (async () => {
-                    try {
-                        await scanner.stop();
-                    } catch (e) {}
-                    stopFpsTicker();
+                    // Show success notification
+                    showStatus('QR Code terdeteksi!', 'success');
+                    showToast('QR Code berhasil dipindai. Mengarahkan ke halaman absensi...', 'success');
+
+                    // Redirect to absensi page
                     setTimeout(() => {
                         window.location.href = "<?= smart_url('absensi/scan') ?>?token=" + encodeURIComponent(token);
-                    }, 300);
-                })();
-
-            }, {
-                preferredCamera: prefDevice || pref,
-                highlightScanRegion: true,
-                highlightCodeOutline: true,
-
-                // REDUCED scans per second to ease CPU
-                maxScansPerSecond: 3,
-
-                calculateScanRegion: (video) => {
-                    const w = video.videoWidth || 640;
-                    const h = video.videoHeight || 360;
-                    const size = Math.round(Math.min(w, h) * 0.72);
-                    return {
-                        x: Math.round((w - size) / 2),
-                        y: Math.round((h - size) / 2),
-                        width: size,
-                        height: size,
-
-                        // reduce downscale for decoding performance
-                        downScaledWidth: 320,
-                        downScaledHeight: 320
-                    };
-                },
-
-                onDecodeError: (err) => {
-                    // normal to have many decode errors; keep quiet to avoid console spam
-                    // only log unexpected types for debugging
-                    if (err && typeof err === 'object' && err.name && err.name !== 'NotFoundException') {
-                        console.debug('QR decode error', err);
+                    }, 500);
+                }, {
+                    preferredCamera: prefDevice || pref,
+                    highlightScanRegion: true,
+                    highlightCodeOutline: true,
+                    maxScansPerSecond: 6,
+                    calculateScanRegion: (video) => {
+                        const w = video.videoWidth,
+                            h = video.videoHeight;
+                        const size = Math.round(Math.min(w, h) * 0.72);
+                        return {
+                            x: Math.round((w - size) / 2),
+                            y: Math.round((h - size) / 2),
+                            width: size,
+                            height: size,
+                            downScaledWidth: 400,
+                            downScaledHeight: 400
+                        };
+                    },
+                    onDecodeError: (error) => {
+                        // Silently handle decode errors - they're normal during scanning
+                        if (error && error !== 'No QR code found') {
+                            console.debug('QR decode error:', error);
+                        }
                     }
                 }
-            });
+            );
 
-            // Try to set camera via deviceId with constraints for lighter footprint
             if (prefDevice) {
-                try {
-                    await scanner.setCamera(prefDevice);
-                } catch (e) {
-                    console.debug('setCamera failed, will rely on constraints', e);
-                }
-            }
-
-            // attempt to apply constraints to the video track for lower resolution if possible
-            try {
-                const track = scanner.$video?.srcObject?.getVideoTracks?.()[0] || (videoElem && videoElem.srcObject && videoElem.srcObject.getVideoTracks && videoElem.srcObject.getVideoTracks()[0]);
-                if (track && track.applyConstraints) {
-                    await track.applyConstraints({
-                        width: 640,
-                        height: 360
-                    });
-                }
-            } catch (e) {
-                /* ignore */
+                await scanner.setCamera(prefDevice);
             }
 
             await scanner.start();
             showStatus('Kamera aktif - siap memindai QR Code', 'success');
             showToast('Scanner berhasil diaktifkan', 'success');
-            startFpsTicker();
 
         } catch (e) {
             console.error('Scanner error:', e);
@@ -665,7 +641,7 @@
         }
     }
 
-    // swap camera handler
+    // Event listeners
     swapBtn.addEventListener('click', async () => {
         await listCameras();
         if (!availableCameras.length) {
@@ -675,11 +651,7 @@
             cameraIndex = (cameraIndex + 1) % availableCameras.length;
             const selectedCamera = availableCameras[cameraIndex];
             if (scanner) {
-                try {
-                    await scanner.setCamera(selectedCamera.id);
-                } catch (e) {
-                    console.debug('setCamera swap failed', e);
-                }
+                await scanner.setCamera(selectedCamera.id);
             } else {
                 usingFront = /front|user|face/i.test(selectedCamera.label);
             }
@@ -689,7 +661,7 @@
         try {
             await startScanner();
         } catch (e) {
-            console.debug('Error after camera swap:', e);
+            console.error('Error after camera swap:', e);
         }
     });
 
@@ -699,47 +671,39 @@
 
     stopBtn.addEventListener('click', async () => {
         if (scanner) {
-            try {
-                await scanner.stop();
-            } catch (e) {
-                console.debug('stop error', e);
-            }
+            await scanner.stop();
             showStatus('Scanner dihentikan');
             showToast('Scanner dihentikan', 'info');
             statusDot.className = 'status-dot';
             cameraLabel.textContent = 'Kamera: Nonaktif';
-            stopFpsTicker();
+            fpsCounter.textContent = '0 FPS';
         } else {
             showStatus('Scanner tidak aktif');
         }
     });
 
+    // Initialize on page load
     window.addEventListener('load', () => {
         if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
             showStatus('Peringatan: Jalankan melalui HTTPS untuk pengalaman terbaik', 'error');
             showToast('Peringatan: Beberapa browser mungkin membatasi akses kamera pada HTTP', 'error');
         }
+
+        // Auto-start scanner
         startScanner().catch((e) => {
-            console.debug('Failed to auto-start scanner:', e);
+            console.error('Failed to auto-start scanner:', e);
         });
     });
 
-    // Cleanup
+    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
         if (scanner) {
             try {
                 scanner.stop();
             } catch (e) {
-                console.debug('Error stopping scanner on unload:', e);
+                console.error('Error stopping scanner on unload:', e);
             }
         }
-    });
-
-    // Expose small helper for debugging (optional)
-    window.__scannerDebug = () => ({
-        cameras: availableCameras,
-        cameraIndex,
-        usingFront
     });
 </script>
 

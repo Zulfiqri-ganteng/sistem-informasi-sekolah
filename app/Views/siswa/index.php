@@ -220,9 +220,21 @@
             </h4>
             <p class="text-muted mb-0">Kelola informasi siswa dengan mudah dan efisien</p>
         </div>
-        <button class="btn btn-primary btn-lg shadow-sm px-4" id="btnAdd">
-            <i class="fas fa-plus-circle me-2"></i>Tambah Siswa
-        </button>
+        <div class="d-flex gap-2 flex-wrap">
+
+            <!-- Tombol Tambah Siswa -->
+            <button class="btn btn-primary btn-lg shadow-sm px-4" id="btnAdd">
+                <i class="fas fa-plus-circle me-2"></i>Tambah Siswa
+            </button>
+
+            <!-- Tombol Import Excel -->
+            <a href="<?= smart_url('siswa/import'); ?>"
+                class="btn btn-success btn-lg shadow-sm px-4">
+                <i class="fas fa-file-excel me-2"></i>Import Excel
+            </a>
+
+        </div>
+
     </div>
 
     <!-- Statistics Cards -->
@@ -488,7 +500,7 @@
                 }
 
                 // Add data labels for mobile
-                const headers = ['No', 'Foto', 'NISN', 'Nama Lengkap','J/K', 'Email', 'Kelas', 'Jurusan', 'Telepon', 'Aksi'];
+                const headers = ['No', 'Foto', 'NISN', 'Nama Lengkap', 'J/K', 'Email', 'Kelas', 'Jurusan', 'Telepon', 'Aksi'];
                 $(row).find('td').each(function(i) {
                     if (headers[i]) {
                         $(this).attr('data-label', headers[i]);
