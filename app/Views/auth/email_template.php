@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title><?= esc($subject ?? 'SMK Galajuara') ?></title>
+  <title><?= esc($subject ?? 'Sistem Informasi Sekolah') ?></title>
 </head>
 
 <body style="background:#eef2f7; font-family:'Poppins',sans-serif; margin:0; padding:25px;">

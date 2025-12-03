@@ -42,7 +42,7 @@
 
 <div class="kop">
     <div>PEMERINTAH KOTA BEKASI</div>
-    <div>SMK GALAJUARA</div>
+    <div>Sistem Informasi Sekolah</div>
     <div style="font-weight: normal">Jl. Pendidikan No. 123 — Telp: (021) 1234567</div>
 </div>
 <div class="line"></div>

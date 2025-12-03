@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($title ?? 'Registrasi Siswa | SMK Galajuara') ?></title>
+    <title><?= esc($title ?? 'Registrasi Siswa | Sistem Informasi Sekolah') ?></title>
 
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -202,9 +202,9 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="register-wrapper text-center">
             <div class="register-header">
-                <img src="<?= smart_url('assets/img/logo.png') ?>" alt="Logo Sekolah">
+                <img src="<?= smart_url('assets/img/logo3.png') ?>" alt="Logo Sekolah">
                 <h4>Registrasi Siswa</h4>
-                <p>SMK Galajuara</p>
+                <p>Sistem Informasi Sekolah</p>
             </div>
 
             <!-- ✅ Alert Interaktif -->

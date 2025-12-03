@@ -194,8 +194,8 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="login-wrapper text-center">
             <div class="login-header">
-                <img src="<?= smart_url('assets/logo.png') ?>" alt="Logo Sekolah">
-                <h4>Sistem Informasi Akademik</h4>
+                <img src="<?= smart_url('assets/img/logo1.png') ?>" alt="Logo Sekolah">
+                <h4>Sistem Informasi Sekolah</h4>
                 <p>Kota Bekasi</p>
             </div>
 
@@ -229,7 +229,7 @@
                 Belum punya akun? <a href="<?= smart_url('register-siswa') ?>">Daftar Disini....!!</a>
             </div>
 
-            <footer>© <?= date('Y') ?> Sistem Inform akademik sekolah </footer>
+            <footer>© <?= date('Y') ?> Sistem Informasi Sekolah </footer>
         </div>
     </div>
 

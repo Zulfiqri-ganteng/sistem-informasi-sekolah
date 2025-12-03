@@ -17,6 +17,7 @@ class SiswaModel extends Model
         'telepon',
         'foto',
         'created_at',
+        'jenis_kelamin',
         'updated_at'
     ];
     protected $useTimestamps = true;

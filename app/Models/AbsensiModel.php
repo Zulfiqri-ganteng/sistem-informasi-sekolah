@@ -19,6 +19,8 @@ class AbsensiModel extends Model
         'keterangan',
         'lokasi_masuk',
         'lokasi_pulang',
+        'tipe_absen',
+        'ekskul_id',
         'created_at'
     ];
 

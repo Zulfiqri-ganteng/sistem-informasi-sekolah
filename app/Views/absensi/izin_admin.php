@@ -14,7 +14,6 @@
 <!-- Memastikan Bootstrap JS loaded untuk Modal dan Tooltip -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
 <style>
     /* Styling Dasar dan Konsisten */
     .page-header {
@@ -189,12 +188,11 @@
                         }
 
                         // PENTING: Menentukan identifier NISN/NIP dan labelnya
-                        // Pastikan kolom nisn dan nip ada dalam data yang dikirim controller
                         $identifier = '';
                         $identifier_label = '';
                         if ($row['user_type'] === 'siswa') {
                             // Cek apakah kolom NISN ada (Jika Siswa)
-                            $identifier = $row['nisn'] ?? $row['nis'] ?? '-'; // Gunakan nisn, jika tidak ada coba nis
+                            $identifier = $row['nisn'] ?? $row['nis'] ?? '-';
                             $identifier_label = 'NISN';
                         } else {
                             // Cek apakah kolom NIP ada (Jika Guru)
@@ -208,24 +206,28 @@
                         $lampiran_url = $row['lampiran'] ? base_url('uploads/izin/' . esc($row['lampiran'])) : null;
 
                         // Periksa apakah user_name ada, jika tidak, gunakan fallback
-                        $user_name = esc($row['user_name'] ?? 'Pengguna [ID:' . $row['user_id'] . ']');
+                        $user_name = $row['user_name'] ?? ('Pengguna [ID:' . $row['user_id'] . ']');
 
+                        // Tentukan folder foto berdasarkan user_type (siswa / guru). Jika user_foto kosong, pakai default.
+                        $fotoFolder = ($row['user_type'] === 'siswa') ? 'siswa' : 'guru';
+                        $fotoFile = $row['user_foto'] ?? 'default.png';
+                        $foto_url = base_url('uploads/' . $fotoFolder . '/' . $fotoFile);
+                        // default image berada di uploads/users/default.png (sesuaikan dengan struktur public/uploads)
+                        $default_img = base_url('uploads/users/default.png');
+
+                        // Untuk data-search-term (semua lowercase) - gunakan esc untuk keamanan
+                        $search_term = strtolower($user_name . ' ' . $identifier . ' ' . ($row['keterangan'] ?? ''));
                         ?>
                         <!-- Menambahkan data-search-term untuk pencarian global -->
-                        <tr data-jenis="<?= esc($row['jenis']) ?>" data-status="<?= esc($row['status']) ?>" data-search-term="<?= esc(strtolower($user_name . ' ' . $identifier . ' ' . $row['keterangan'])) ?>">
+                        <tr data-jenis="<?= esc($row['jenis']) ?>" data-status="<?= esc($row['status']) ?>" data-search-term="<?= esc($search_term) ?>">
                             <td class="text-nowrap fw-bold"><?= date('d M Y', strtotime($row['tanggal'])) ?></td>
                             <td>
                                 <div class="user-info">
-                                    <?php
-                                    // PENTING: Perbaiki path foto user dan gunakan fallback
-                                    $foto_url = base_url('uploads/user/' . ($row['user_foto'] ?? 'default.png'));
-                                    $default_img = base_url('assets/img/default.png');
-                                    ?>
-                                    <img src="<?= $foto_url ?>" onerror="this.onerror=null;this.src='<?= $default_img ?>';" class="rounded-circle me-2" alt="Foto" width="35" height="35">
+                                    <img src="<?= esc($foto_url) ?>" onerror="this.onerror=null;this.src='<?= esc($default_img) ?>';" class="rounded-circle me-2" alt="Foto" width="35" height="35">
                                     <div>
-                                        <span class="user-name-text"><?= $user_name ?></span>
+                                        <span class="user-name-text"><?= esc($user_name) ?></span>
                                         <!-- Tampilkan Tipe Pengguna dan ID (NISN/NIP) -->
-                                        <span class="user-identifier">(<?= ucwords($row['user_type']) ?> - <?= esc($identifier) ?>)</span>
+                                        <span class="user-identifier">(<?= esc(ucwords($row['user_type'])) ?> - <?= esc($identifier) ?>)</span>
                                     </div>
                                 </div>
                             </td>
@@ -233,7 +235,7 @@
                             <td style="max-width: 250px; white-space: normal;"><?= esc($row['keterangan']) ?></td>
                             <td class="text-center">
                                 <?php if (!empty($row['lampiran'])): ?>
-                                    <a href="<?= $lampiran_url ?>" target="_blank" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="Lihat Lampiran">
+                                    <a href="<?= esc($lampiran_url) ?>" target="_blank" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="Lihat Lampiran">
                                         <i class="fas fa-file-alt"></i>
                                     </a>
                                 <?php else: ?>
@@ -241,18 +243,18 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <span class="status-badge <?= $badge_class ?>">
+                                <span class="status-badge <?= esc($badge_class) ?>">
                                     <?= $status_icon ?>
-                                    <?= ucwords(esc($row['status'])) ?>
+                                    <?= esc(ucwords($row['status'])) ?>
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-action-group">
                                     <?php if ($row['status'] == 'pending'): ?>
-                                        <button class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Setujui Izin" onclick="openApprove(<?= $row['id'] ?>, '<?= esc(addslashes($user_name)) ?>')">
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Setujui Izin" onclick='openApprove(<?= $row["id"] ?>, <?= json_encode($user_name) ?>)'>
                                             <i class="fas fa-check"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Tolak Izin" onclick="openReject(<?= $row['id'] ?>, '<?= esc(addslashes($user_name)) ?>')">
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Tolak Izin" onclick='openReject(<?= $row["id"] ?>, <?= json_encode($user_name) ?>)'>
                                             <i class="fas fa-times"></i>
                                         </button>
                                     <?php else: ?>
@@ -434,10 +436,13 @@
         });
 
         // Inisialisasi Tooltip setelah DOM siap
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
+        function initTooltips() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        initTooltips();
 
         // Aplikasikan filter awal
         applyCustomFilter();

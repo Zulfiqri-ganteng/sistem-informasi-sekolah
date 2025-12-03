@@ -1,7 +1,7 @@
 <div class="sidebar shadow-lg">
     <div class="brand text-center py-4 border-bottom border-secondary-subtle">
         <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_SMK.png" alt="logo" class="mb-2" style="height:55px;">
-        <h6 class="fw-bold text-white mb-0">SMK Galajuara</h6>
+        <h6 class="fw-bold text-white mb-0">Sistem Informasi Sekolah</h6>
         <small class="text-light opacity-75">Sistem Tabungan</small>
     </div>
 

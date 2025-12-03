@@ -5,6 +5,44 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+// =======================
+//  CRONJOB ROUTES (AMAN)
+// =======================
+$routes->get('cron/auto-pulang-ekskul', 'Absensi\ScanController::cronAutoPulang');
+
+$routes->get('activity', 'ActivityLogs::index', ['filter' => 'auth']); // auth filter = your login check
+$routes->post('activity/ajaxList', 'ActivityLogs::ajaxList', ['filter' => 'auth']);
+$routes->get('activity/view/(:num)', 'ActivityLogs::view/$1', ['filter' => 'auth']);
+$routes->get('activity/export', 'ActivityLogs::exportCsv', ['filter' => 'auth']);
+$routes->group('admin', ['filter' => ['auth', 'activityLogger']], static function ($routes) {
+
+    $routes->get('profil', 'Admin::profil');
+    $routes->post('update-profil', 'Admin::updateProfil');
+
+    // Ganti password admin
+    $routes->get('ganti-password', 'Admin::gantiPassword');
+    $routes->post('ganti-password', 'Admin::gantiPassword');
+
+    // Jadwal
+    $routes->get('jadwal', 'Admin\JadwalController::index');
+    $routes->post('jadwal/update', 'Admin\JadwalController::updateJadwal');
+    $routes->post('jadwal/add-libur', 'Admin\JadwalController::addHariLibur');
+    $routes->get('jadwal/delete-libur/(:num)', 'Admin\JadwalController::deleteHariLibur/$1');
+
+    // Absensi Admin
+    $routes->get('dashboard', 'Absensi::dashboard');
+    $routes->get('generate', 'Absensi::generate');
+    $routes->get('scan-camera', 'Absensi::scanCamera');
+    $routes->get('riwayat', 'Absensi::riwayat');
+    $routes->get('izin/admin', 'Absensi::kelolaIzinAdmin');
+
+    // Pengaturan Jadwal
+    $routes->get('pengaturan', 'Admin\JadwalController::index');
+    $routes->post('pengaturan/update-jadwal', 'Admin\JadwalController::updateJadwal');
+    $routes->post('pengaturan/tambah-libur', 'Admin\JadwalController::addHariLibur');
+    $routes->delete('pengaturan/hapus-libur/(:num)', 'Admin\JadwalController::deleteHariLibur/$1');
+});
+
 
 // ==================== AUTH ====================
 $routes->get('login', 'Auth::login');
@@ -68,14 +106,7 @@ $routes->group('siswa', ['filter' => 'auth'], static function ($routes) {
 // =====================
 // ⚙️ ADMIN PROFIL & PASSWORD
 // =====================
-$routes->group('admin', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('profil', 'Admin::profil');
-    $routes->post('update-profil', 'Admin::updateProfil');
 
-    // Ganti password admin
-    $routes->get('ganti-password', 'Admin::gantiPassword');
-    $routes->post('ganti-password', 'Admin::gantiPassword');
-});
 // =============== ADMIN: CRUD DATA GURU ==================
 $routes->group('admin/guru', ['filter' => 'auth'], static function ($routes) {
 
@@ -187,6 +218,21 @@ $routes->group('laporan', ['filter' => 'auth'], static function ($routes) {
     $routes->get('export-pdf', 'Laporan::exportPdf');
     $routes->get('export-word', 'Laporan::exportWord');
 });
+// LAPORAN ABSENSI (Harian + Ekskul)
+// LAPORAN ABSENSI (Harian + Ekskul)
+$routes->group('absensi/laporan', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'Absensi\LaporanController::index');
+    $routes->post('hasil', 'Absensi\LaporanController::hasil');
+
+    // Ekskul Bulanan (view + export)
+    $routes->get('ekskulBulanan', 'Absensi\LaporanController::ekskulBulanan');
+    $routes->get('ekskulBulananPdf', 'Absensi\LaporanController::ekskulBulananPdf');
+
+    // existing export placeholders
+    $routes->get('export-pdf', 'Absensi\LaporanController::exportPdf');
+    $routes->get('export-word', 'Absensi\LaporanController::exportWord');
+    $routes->get('export-excel', 'Absensi\LaporanController::exportExcel');
+});
 
 // Manajemen User (admin only)
 $routes->group('users', ['filter' => 'role:admin'], function ($routes) {
@@ -285,6 +331,53 @@ $routes->group('absensi/izin', ['filter' => 'absensiRole:siswa'], function ($rou
     $routes->get('form', 'Absensi\IzinController::form');
     // Rute untuk submit form pengajuan
     $routes->post('submit', 'Absensi\IzinController::submit');
+});
+
+// ekskul routes
+$routes->group('ekskul', ['filter' => 'auth'], function ($routes) {
+    // Controller yang dicari CodeIgniter: app/Controllers/Ekskul/EkskulController.php
+
+    // 1. GET /ekskul -> Menampilkan daftar ekskul (index)
+    $routes->get('/', 'Ekskul\EkskulController::index');
+
+    // 2. POST /ekskul/save -> Menyimpan atau memperbarui data Ekskul Master
+    $routes->post('save', 'Ekskul\EkskulController::save');
+
+    // 3. GET /ekskul/delete/1 -> Menghapus Ekskul Master berdasarkan ID (menggunakan GET, sesuai format awal Anda)
+    $routes->get('delete/(:num)', 'Ekskul\EkskulController::delete/$1');
+
+    // --- LOGIKA JADWAL EKSTRAKURIKULER ---
+
+    // 4. POST /ekskul/saveJadwal -> Menyimpan/Memperbarui data Jadwal. 
+    //    Ini menggantikan 'addJadwal' yang lama dan menggunakan nama Controller yang benar.
+    $routes->post('saveJadwal', 'Ekskul\EkskulController::saveJadwal');
+
+    // 5. GET /ekskul/deleteJadwal/1 -> Menghapus Jadwal berdasarkan ID (menggunakan GET)
+    $routes->get('deleteJadwal/(:num)', 'Ekskul\EkskulController::deleteJadwal/$1');
+
+    // CATATAN: Baris rute yang salah di versi Anda (`$routes->post('saveJadwal', 'Ekskul\Ekstrakurikuler::saveJadwal');` dan dua baris di bawahnya) SUDAH SAYA HAPUS.
+});
+
+// Activity Logs Routes
+$routes->get('activity', 'ActivityLogs::index');
+$routes->post('activity/ajaxList', 'ActivityLogs::ajaxList');
+$routes->get('activity/view/(:num)', 'ActivityLogs::view/$1');
+$routes->get('activity/exportCsv', 'ActivityLogs::exportCsv');
+$routes->get('activity/getStats', 'ActivityLogs::getStats');
+
+// Maintenance Routes (Admin Only) - REKOMENDASI: gunakan camelCase
+$routes->group('maintenance', ['filter' => 'role:admin'], function ($routes) {
+    $routes->get('cleanLog', 'Maintenance::cleanLog');
+    $routes->get('cleanAll', 'Maintenance::cleanAll');
+    $routes->get('getLogCount', 'Maintenance::getLogCount');
+});
+
+$routes->group('ekskul/anggota', function ($routes) {
+    $routes->get('(:num)', 'Ekskul\AnggotaEkskulController::index/$1');
+    $routes->get('add/(:num)', 'Ekskul\AnggotaEkskulController::add/$1');
+    $routes->post('save', 'Ekskul\AnggotaEkskulController::save');
+    $routes->get('delete/(:num)', 'Ekskul\AnggotaEkskulController::delete/$1');
+    $routes->get('update/(:num)', 'Ekskul\AnggotaEkskulController::update/$1');
 });
 
 // =====================

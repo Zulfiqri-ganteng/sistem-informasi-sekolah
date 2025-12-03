@@ -7,10 +7,11 @@ use App\Models\IzinModel;
 use App\Models\AbsensiModel;
 use App\Models\SiswaModel;
 use App\Models\GuruModel;
+use Config\Database;
 
 class IzinController extends BaseController
 {
-    protected $izin, $absensi, $siswa, $guru;
+    protected $izin, $absensi, $siswa, $guru, $db;
 
     public function __construct()
     {
@@ -19,6 +20,7 @@ class IzinController extends BaseController
         $this->absensi   = new AbsensiModel();
         $this->siswa     = new SiswaModel();
         $this->guru      = new GuruModel();
+        $this->db        = Database::connect();
     }
 
     /**
@@ -85,7 +87,8 @@ class IzinController extends BaseController
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
                 // PENTING: Pastikan folder 'writable/uploads/izin/' sudah ada dan bisa ditulis
-                $file->move(WRITEPATH . 'uploads/izin', $newName);
+                $file->move(FCPATH . 'uploads/izin', $newName);
+
                 $lampiran = $newName;
             }
         } catch (\Throwable $e) {
@@ -141,44 +144,22 @@ class IzinController extends BaseController
         $output = [];
 
         foreach ($listIzin as $row) {
+            // default fallback
             $userInfo = [
-                'user_name' => 'Pengguna Tidak Ditemukan', // Fallback awal
-                'user_foto' => null,
-                'nisn' => 'N/A',
-                'nip' => 'N/A',
-                'identifier' => 'N/A', // Identifier umum untuk di view (NISN/NIP)
-                'nama_model' => '', // Untuk menampilkan data dari model mana (Siswa/Guru)
+                'user_name'   => 'Pengguna Tidak Ditemukan',
+                'user_foto'   => null,
+                'nisn'        => 'N/A',
+                'nip'         => 'N/A',
+                'identifier'  => 'N/A',
+                'nama_model'  => '',
             ];
 
-            // Ambil data detail user
-            if ($row['user_type'] === 'siswa') {
-                // *** PERBAIKAN KRUSIAL DI SINI ***
-                // Mencari berdasarkan kolom 'user_id' (Foreign Key ke tabel users) BUKAN Primary Key 'id'
-                $user = $this->siswa
-                    ->select('nama, foto, nisn')
-                    ->where('user_id', $row['user_id'])
-                    ->first();
-                if ($user) {
-                    $userInfo['user_name'] = $user['nama'];
-                    $userInfo['user_foto'] = $user['foto'];
-                    $userInfo['nisn'] = $user['nisn'];
-                    $userInfo['identifier'] = $user['nisn'];
-                    $userInfo['nama_model'] = 'Siswa';
-                }
-            } elseif ($row['user_type'] === 'guru') {
-                // *** PERBAIKAN KRUSIAL DI SINI ***
-                // Mencari berdasarkan kolom 'user_id' (Foreign Key ke tabel users) BUKAN Primary Key 'id'
-                $user = $this->guru
-                    ->select('nama, foto, nip')
-                    ->where('user_id', $row['user_id'])
-                    ->first();
-                if ($user) {
-                    $userInfo['user_name'] = $user['nama'];
-                    $userInfo['user_foto'] = $user['foto'];
-                    $userInfo['nip'] = $user['nip'];
-                    $userInfo['identifier'] = $user['nip'];
-                    $userInfo['nama_model'] = 'Guru';
-                }
+            // Ambil detail user dengan fungsi helper internal
+            $resolved = $this->resolveUserInfo((int)$row['user_id'], $row['user_type']);
+
+            if ($resolved) {
+                // Gabungkan hasil
+                $userInfo = array_merge($userInfo, $resolved);
             }
 
             // gabungkan row izin + data user
@@ -193,6 +174,131 @@ class IzinController extends BaseController
         ]);
     }
 
+    /**
+     * Resolve user info (nama, foto, nisn/nip, identifier, nama_model)
+     * Mencoba beberapa pola:
+     * 1. cari siswa/guru WHERE siswa.user_id = users.id (skenario ideal)
+     * 2. jika tidak ditemukan, join users -> siswa via users.siswa_id = siswa.id
+     * 3. jika masih tidak ditemukan, ambil nama/foto langsung dari tabel users (fallback)
+     */
+    private function resolveUserInfo(int $userId = 0, string $userType = '')
+    {
+        if (!$userId) return null;
+
+        $result = [
+            'user_name'  => null,
+            'user_foto'  => null,
+            'nisn'       => 'N/A',
+            'nip'        => 'N/A',
+            'identifier' => 'N/A',
+            'nama_model' => '',
+        ];
+
+        try {
+            if ($userType === 'siswa') {
+                // 1) Coba cari siswa berdasarkan siswa.user_id = users.id
+                $s1 = $this->siswa
+                    ->select('siswa.nama, siswa.foto, siswa.nisn')
+                    ->where('user_id', $userId)
+                    ->first();
+
+                if ($s1) {
+                    $result['user_name']  = $s1['nama'] ?? null;
+                    $result['user_foto']  = $s1['foto'] ?? null;
+                    $result['nisn']       = $s1['nisn'] ?? 'N/A';
+                    $result['identifier'] = $result['nisn'];
+                    $result['nama_model'] = 'Siswa';
+                    return $result;
+                }
+
+                // 2) Fallback: join users.siswa_id = siswa.id (beberapa sistem menyimpan relasi ke users.siswa_id)
+                $s2 = $this->siswa
+                    ->select('siswa.nama, siswa.foto, siswa.nisn')
+                    ->join('users', 'users.siswa_id = siswa.id', 'left')
+                    ->where('users.id', $userId)
+                    ->first();
+
+                if ($s2) {
+                    $result['user_name']  = $s2['nama'] ?? null;
+                    $result['user_foto']  = $s2['foto'] ?? null;
+                    $result['nisn']       = $s2['nisn'] ?? 'N/A';
+                    $result['identifier'] = $result['nisn'];
+                    $result['nama_model'] = 'Siswa';
+                    return $result;
+                }
+
+                // 3) Ultimate fallback: ambil data dasar dari tabel users langsung (kolom nama/foto)
+                $u = $this->db->table('users')->select('nama, foto')->where('id', $userId)->get()->getRowArray();
+                if ($u) {
+                    $result['user_name']  = $u['nama'] ?? null;
+                    $result['user_foto']  = $u['foto'] ?? null;
+                    $result['identifier'] = 'N/A';
+                    $result['nama_model'] = 'Users';
+                    return $result;
+                }
+
+                return null;
+            } elseif ($userType === 'guru') {
+                // 1) Coba cari guru berdasarkan guru.user_id = users.id
+                $g1 = $this->guru
+                    ->select('guru.nama, guru.foto, guru.nip')
+                    ->where('user_id', $userId)
+                    ->first();
+
+                if ($g1) {
+                    $result['user_name']  = $g1['nama'] ?? null;
+                    $result['user_foto']  = $g1['foto'] ?? null;
+                    $result['nip']        = $g1['nip'] ?? 'N/A';
+                    $result['identifier'] = $result['nip'];
+                    $result['nama_model'] = 'Guru';
+                    return $result;
+                }
+
+                // 2) Fallback: join users -> guru (jika ada pola lain) - coba join users.guru_id = guru.id
+                $g2 = $this->guru
+                    ->select('guru.nama, guru.foto, guru.nip')
+                    ->join('users', 'users.guru_id = guru.id', 'left')
+                    ->where('users.id', $userId)
+                    ->first();
+
+                if ($g2) {
+                    $result['user_name']  = $g2['nama'] ?? null;
+                    $result['user_foto']  = $g2['foto'] ?? null;
+                    $result['nip']        = $g2['nip'] ?? 'N/A';
+                    $result['identifier'] = $result['nip'];
+                    $result['nama_model'] = 'Guru';
+                    return $result;
+                }
+
+                // 3) Fallback ke tabel users
+                $u = $this->db->table('users')->select('nama, foto')->where('id', $userId)->get()->getRowArray();
+                if ($u) {
+                    $result['user_name']  = $u['nama'] ?? null;
+                    $result['user_foto']  = $u['foto'] ?? null;
+                    $result['identifier'] = 'N/A';
+                    $result['nama_model'] = 'Users';
+                    return $result;
+                }
+
+                return null;
+            } else {
+                // user_type lain (mis. admin) => ambil data dasar dari users
+                $u = $this->db->table('users')->select('nama, foto')->where('id', $userId)->get()->getRowArray();
+                if ($u) {
+                    $result['user_name']  = $u['nama'] ?? null;
+                    $result['user_foto']  = $u['foto'] ?? null;
+                    $result['identifier'] = 'N/A';
+                    $result['nama_model'] = 'Users';
+                    return $result;
+                }
+                return null;
+            }
+        } catch (\Throwable $e) {
+            // Log kesalahan, jangan lempar exception agar UI tetap stabil
+            log_message('error', 'resolveUserInfo Error: ' . $e->getMessage());
+            return null;
+        }
+    }
 
     /**
      * Menyetujui pengajuan izin.
@@ -304,7 +410,6 @@ class IzinController extends BaseController
             log_message('error', 'Absensi Delete Error on Reject: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal sinkronisasi status absensi. Error: ' . $e->getMessage());
         }
-
 
         return redirect()->back()->with('success', 'Izin berhasil ditolak.');
     }

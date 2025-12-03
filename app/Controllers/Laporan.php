@@ -280,7 +280,7 @@ class Laporan extends BaseController
         // Identitas Sekolah
         $cell = $kop->addCell(9000);
         $cell->addText('PEMERINTAH KOTA BEKASI', ['bold' => true, 'size' => 14], ['alignment' => 'center']);
-        $cell->addText('SMK GALAJUARA', ['bold' => true, 'size' => 18], ['alignment' => 'center']);
+        $cell->addText('Sistem Informasi Sekolah', ['bold' => true, 'size' => 18], ['alignment' => 'center']);
         $cell->addText('Jl. Pendidikan No. 123, Kota Bekasi — Telp: (021) 1234567', ['size' => 11], ['alignment' => 'center']);
 
         // Garis tebal bawah kop

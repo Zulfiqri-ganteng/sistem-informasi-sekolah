@@ -30,6 +30,7 @@ class GuruController extends Controller
         $this->jurusanModel    = new JurusanModel();
         $this->guruMapelModel  = new GuruMapelModel();
         $this->db              = Database::connect();
+        helper('activity');
     }
 
     // ==============================
@@ -150,6 +151,13 @@ class GuruController extends Controller
 
                 $this->guruModel->insert($guruData);
                 $guruId = $this->guruModel->insertID();
+                // 🔥 LOG: Guru baru ditambahkan
+                logCrud(
+                    'guru',
+                    'create',
+                    "Tambah guru baru: $nama (NIP: $nip)",
+                    $guruData
+                );
 
                 // Insert multi mapel
                 foreach ($mapelIds as $m) {
@@ -179,6 +187,13 @@ class GuruController extends Controller
                 }
 
                 $this->guruModel->update($id, $guruData);
+                // 🔥 LOG: Update guru
+                logCrud(
+                    'guru',
+                    'update',
+                    "Update data guru ID: $id ($nama)",
+                    $guruData
+                );
 
                 // Sync user
                 $guru = $this->guruModel->find($id);
@@ -233,6 +248,13 @@ class GuruController extends Controller
         }
 
         $this->guruModel->delete($id);
+        // 🔥 LOG DELETE
+        logCrud(
+            'guru',
+            'delete',
+            "Hapus guru ID: $id beserta akun user terkait",
+            $guru ?? null
+        );
 
         return $this->response->setJSON(['success' => true]);
     }

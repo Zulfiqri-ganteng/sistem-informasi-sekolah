@@ -88,6 +88,7 @@ class Auth extends BaseController
 
         // Buat session
         $sessionData = [
+            'id'         => $user['id'],            // WAJIB UNTUK SMART LOGGER
             'user_id'    => $user['id'],
             'username'   => $user['username'],
             'role'       => $user['role'],
@@ -116,7 +117,15 @@ class Auth extends BaseController
             ");
             @$email->send();
         }
-
+        // // LOG AKTIVITAS
+        // helper('activity');
+        // activity_log([
+        //     'user_id' => $user['id'],
+        //     'role' => $user['role'],
+        //     'module' => 'auth',
+        //     'action' => 'login',
+        //     'detail' => 'Login sukses ke sistem'
+        // ]);
         // Redirect sesuai role
         return $this->redirectByRole($user['role'])
             ->with('success', 'Selamat datang, ' . ($user['nama'] ?? $user['username']) . '!');
@@ -127,7 +136,18 @@ class Auth extends BaseController
     // --------------------------------------------------------
     public function logout()
     {
+        // helper('activity');
+        // activity_log([
+        //     'user_id' => session()->get('user_id'),
+        //     'role'    => session()->get('role'),
+        //     'module'  => 'auth',
+        //     'action'  => 'logout',
+        //     'detail'  => 'Logout dari sistem'
+        // ]);
+
+        // hancurkan session SETELAH log terekam
         session()->destroy();
+
         return redirect()->to('/login')->with('success', 'Anda telah logout.');
     }
 

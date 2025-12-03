@@ -38,6 +38,8 @@ class Filters extends BaseFilters
         'removeindex'   => RemoveIndex::class,
         'admin' => \App\Filters\RoleFilter::class,
         'absensiRole' => \App\Filters\AbsensiRoleFilter::class,
+        'activityLogger' => \App\Filters\ActivityLogger::class,
+
     ];
 
     /**
@@ -48,9 +50,7 @@ class Filters extends BaseFilters
             'removeindex',
             // 'csrf', // aktifkan CSRF global
         ],
-        'after' => [
-            
-        ],
+        'after' => [],
     ];
 
     /**

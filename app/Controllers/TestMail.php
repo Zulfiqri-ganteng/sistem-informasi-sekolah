@@ -13,7 +13,7 @@ class TestMail extends Controller
         $email->setTo('email_tujuan@gmail.com'); // ubah ke email kamu sendiri dulu
         $email->setFrom('noreply@zulfiqri.com', 'Sistem Informasi Sekolah');
         $email->setSubject('Tes SMTP Rumahweb');
-        $email->setMessage('<h3>Halo!</h3><p>Email ini dikirim otomatis dari sistem tabungan SMK Galajuara.</p>');
+        $email->setMessage('<h3>Halo!</h3><p>Email ini dikirim otomatis dari sistem tabungan Sistem Informasi Sekolah.</p>');
 
         if ($email->send()) {
             echo '✅ Email berhasil dikirim! Cek inbox/spam ya.';

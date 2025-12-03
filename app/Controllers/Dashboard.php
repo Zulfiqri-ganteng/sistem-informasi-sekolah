@@ -174,7 +174,8 @@ class Dashboard extends BaseController
                 'kelas' => $kelas,
                 'jam_masuk' => $r['jam_masuk'],
                 'jam_pulang' => $r['jam_pulang'],
-                'status' => $r['status']
+                'status' => $r['status'],
+                'tipe_absen' => $r['tipe_absen'] ?? 'harian' // PERBAIKAN: tambahkan tipe_absen
             ];
         }
 
@@ -272,7 +273,8 @@ class Dashboard extends BaseController
                 'kelas' => $kelasName,
                 'jam_masuk' => $r['jam_masuk'],
                 'jam_pulang' => $r['jam_pulang'],
-                'status' => $r['status']
+                'status' => $r['status'],
+                'tipe_absen' => $r['tipe_absen'] ?? 'harian' // PERBAIKAN: tambahkan tipe_absen
             ];
         }
 
@@ -378,7 +380,6 @@ class Dashboard extends BaseController
 
         return $rows;
     }
-
 
     public function transaksiAjax()
     {

@@ -33,9 +33,21 @@ Events::on('pre_system', static function (): void {
             ob_end_flush();
         }
 
-        ob_start(static fn ($buffer) => $buffer);
+        ob_start(static fn($buffer) => $buffer);
     }
+    Events::on('pre_system', function () {
 
+        set_error_handler(function ($severity, $message, $file, $line) {
+
+            $model = new ErrorLogModel();
+            $model->insert([
+                'level'   => $severity,
+                'message' => $message,
+                'file'    => $file,
+                'line'    => $line,
+            ]);
+        });
+    });
     /*
      * --------------------------------------------------------------------
      * Debug Toolbar Listeners.

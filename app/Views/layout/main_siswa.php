@@ -1,7 +1,7 @@
 <div class="sidebar">
     <div class="logo">
         <i class="fa fa-graduation-cap"></i>
-        <span>SMK Galajuara</span>
+        <span>Sistem Informasi Sekolah</span>
     </div>
     <ul>
         <li><a href="<?= smart_url('siswa/dashboard') ?>" class="<?= url_is('siswa/dashboard') ? 'active' : '' ?>"><i class="fa fa-home"></i> Dashboard</a></li>

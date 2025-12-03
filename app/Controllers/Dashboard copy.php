@@ -320,7 +320,7 @@ class Dashboard extends BaseController
         return $rows;
     }
 
-private function getJurusan()
+    private function getJurusan()
     {
         $db = \Config\Database::connect();
 
@@ -348,7 +348,7 @@ private function getJurusan()
             // **PERBAIKAN:** Kita asumsikan tabel 'kelas' HANYA punya 'nama_kelas' dan 'id'.
             // Kolom 'jurusan' kemungkinan TIDAK ADA di tabel 'kelas' tetapi diminta di index.php,
             // sehingga kita berikan nilai NULL sebagai 'jurusan' untuk mencegah error.
-            
+
             // Jika tabel 'kelas' Anda memang memiliki kolom 'jurusan', ganti dengan:
             // ->select('nama_kelas as kelas, jurusan')
 

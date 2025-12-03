@@ -14,95 +14,117 @@ class RiwayatController extends BaseController
         $this->absensiModel = new AbsensiModel();
     }
 
-    /** =============================
-     *  HALAMAN VIEW
-     *  ============================= */
+    /** ===========================================
+     *  HALAMAN VIEW
+     *  =========================================== */
     public function index()
     {
         return view('absensi/riwayat/index');
     }
 
-
-    /** =============================
-     *  AJAX DATATABLES
-     *  ============================= */
+    /** ===========================================
+     *  AJAX DATATABLE PRO MAX
+     *  =========================================== */
     public function riwayatAjax()
     {
-        $role       = session('role');      // role user yang sedang login
+        $role       = session('role');
         $userId     = session('id');
         $kelasUser  = session('kelas');
+        $filter     = $this->request->getGet('filter') ?? 'today';
 
-        /** =============================
-         *  BASE QUERY
-         *  ============================= */
         $builder = $this->absensiModel
             ->select("
                 absensi.*,
-                users.nama AS user_nama,
-                users.role AS user_role,
-                siswa.nama AS siswa_nama,
-                siswa.kelas AS siswa_kelas
+                COALESCE(siswa.nama, users.nama) AS final_nama,
+                COALESCE(siswa.kelas, '-') AS final_kelas,
+                users.role AS final_role,
+                absensi.tipe_absen AS tipe
             ")
-            // Join ke tabel users menggunakan absensi.user_id (HARUSNYA USER ID)
-            ->join('users', 'users.id = absensi.user_id', 'left')
-            // Join ke tabel siswa menggunakan users.siswa_id
-            ->join('siswa', 'siswa.id = users.siswa_id', 'left');
+            ->join('siswa', 'siswa.id = absensi.user_id', 'left')
+            ->join('users', 'users.id = siswa.user_id', 'left');
 
-        /** =============================
-         *  FILTER ROLE 
-         *  ============================= */
 
-        // siswa → lihat absensi miliknya sendiri
+        /** ===========================================
+         *  FILTER ROLE (ADMIN / GURU / SISWA)
+         *  =========================================== */
         if ($role === 'siswa') {
             $builder->where('absensi.user_id', $userId);
         }
 
-        // guru → lihat siswa yang satu kelas dengan dia
         if ($role === 'guru') {
-            // Filter hanya absensi siswa di kelas guru
-            $builder->where('siswa.kelas', $kelasUser)
-                ->where('users.role', 'siswa');
+            $builder
+                ->where('users.role', 'siswa')
+                ->where('siswa.kelas', $kelasUser);
         }
 
-        // admin → bebas tanpa filter
+        /** ===========================================
+         *  FILTER WAKTU
+         *  =========================================== */
+        switch ($filter) {
+            case 'yesterday':
+                $builder->where('DATE(absensi.created_at)', date('Y-m-d', strtotime('-1 day')));
+                break;
 
+            case 'week':
+                $builder->where('YEARWEEK(absensi.created_at)', date('oW'));
+                break;
+
+            case 'month':
+                $builder->where('MONTH(absensi.created_at)', date('m'))
+                    ->where('YEAR(absensi.created_at)', date('Y'));
+                break;
+
+            case 'all':
+                break;
+
+            default: // today
+                $builder->where('DATE(absensi.created_at)', date('Y-m-d'));
+        }
+
+        /** ===========================================
+         *  EXECUTE QUERY
+         *  =========================================== */
         $result = $builder
             ->orderBy('absensi.created_at', 'DESC')
             ->get()
             ->getResult();
 
-
-        /** =============================
-         *  FORMAT OUTPUT DATATABLES
-         *  ============================= */
+        /** ===========================================
+         *  FORMAT OUTPUT
+         *  =========================================== */
         $output = [];
 
         foreach ($result as $row) {
 
-            // Menentukan Nama: Utamakan siswa.nama, jika null, gunakan users.nama (untuk guru/admin)
-            $nama = !empty($row->siswa_nama) ? $row->siswa_nama : ($row->user_nama ?? "-");
+            // Tentukan role untuk badge tampilan
+            $tipeBadge = match ($row->final_role) {
+                'siswa' => 'Siswa',
+                'guru'  => 'Guru',
+                default => 'Admin'
+            };
 
-            // Menentukan Kelas: Ambil dari siswa.kelas. Jika null (untuk guru/admin), gunakan "-"
-            $kelas = $row->siswa_kelas ?? "-";
+            // Badge status
+            $statusColor = 'secondary';
 
-            // Role: Ambil role dari data absensi/users, bukan dari sesi login saat ini
-            $displayRole = $row->user_role ?? $row->user_type ?? "-";
-
+            if (in_array($row->status, ['masuk', 'hadir'])) $statusColor = 'success';
+            elseif ($row->status === 'terlambat') $statusColor = 'warning';
+            elseif ($row->status === 'izin') $statusColor = 'info';
+            elseif ($row->status === 'sakit') $statusColor = 'primary';
+            elseif (in_array($row->status, ['pulang', 'pulang_awal'])) $statusColor = 'danger';
 
             $output[] = [
                 "created_at" => $row->created_at,
-                "nama"       => $nama,
-                "role"       => $displayRole, // Menggunakan role dari data hasil join
-                "kelas"      => $kelas,
+                "nama"       => $row->final_nama,
+                "role"       => $tipeBadge,
+                "kelas"      => $row->final_kelas,
+                "tipe"       => strtoupper($row->tipe),
                 "status"     => $row->status,
-                "jam_masuk"  => $row->jam_masuk,
-                "jam_pulang" => $row->jam_pulang,
+                "status_color" => $statusColor,
+                "jam_masuk"  => $row->jam_masuk ?: "-",
+                "jam_pulang" => $row->jam_pulang ?: "-",
             ];
         }
 
-
-        return $this->response->setJSON([
-            "data" => $output
-        ]);
+        return $this->response->setJSON(["data" => $output]);
     }
 }

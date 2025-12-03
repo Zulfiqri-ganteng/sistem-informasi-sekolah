@@ -26,18 +26,28 @@ class Users extends BaseController
     public function index()
     {
         $users = $this->userModel
-            ->select('users.*, siswa.nama AS nama_siswa, guru.nama AS nama_guru')
-            ->join('siswa', 'siswa.id = users.siswa_id', 'left')
-            ->join('guru', 'guru.nip = users.username', 'left')   // <-- FIX!
+            ->select("
+            users.*,
+            siswa.nama AS nama_siswa,
+            guru.nama AS nama_guru
+        ")
+
+            // JOIN SISWA PAKAI user_id
+            ->join('siswa', 'siswa.user_id = users.id', 'left')
+
+            // JOIN GURU PAKAI user_id
+            ->join('guru', 'guru.user_id = users.id', 'left')
+
             ->orderBy('users.id', 'ASC')
             ->findAll();
-
 
         return view('users/index', [
             'title' => 'Manajemen User',
             'users' => $users
         ]);
     }
+
+
 
     // ======================================================
     // 🔐 RESET PASSWORD (kembali ke username)

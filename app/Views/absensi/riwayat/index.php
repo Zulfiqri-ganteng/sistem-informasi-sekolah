@@ -1,75 +1,125 @@
-<?= $this->extend('layout/main'); ?>
-<?= $this->section('content'); ?>
+<?= $this->extend('layout/main') ?>
+<?= $this->section('content') ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 
 <style>
     body {
-        background: #f1f5f9 !important;
+        background: #f5f7fb !important;
     }
 
-    .hero-card {
+    .hero-box {
         background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        border-radius: 16px;
-        padding: 25px;
         color: white;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+        padding: 28px;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(79, 70, 229, .25);
+        margin-bottom: 25px;
     }
 
-    .hero-card .circle-deco {
-        position: absolute;
-        width: 180px;
-        height: 180px;
-        background: rgba(255, 255, 255, 0.09);
-        border-radius: 50%;
-        top: -40px;
-        right: -30px;
-    }
-
-    .pro-card {
+    .stat-box {
         background: white;
-        border-radius: 14px;
-        padding: 20px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        border-radius: 16px;
+        padding: 18px;
+        text-align: center;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+    }
+
+    .stat-box h3 {
+        font-weight: 700;
+    }
+
+    .stat-label {
+        font-size: .8rem;
+        color: #64748b;
+    }
+
+    .filter-select {
+        border-radius: 10px;
+        padding: 8px 14px;
+        border: 1px solid #d0d7e2;
     }
 
     .badge-status {
         padding: 6px 12px;
-        border-radius: 30px;
-        font-size: 0.75rem;
+        border-radius: 8px;
+        font-size: .75rem;
         font-weight: 600;
     }
 </style>
 
-<div class="container-fluid py-4 px-3 px-md-4">
+<div class="container-fluid">
 
-    <div class="hero-card mb-4 animate__animated animate__fadeInDown">
-        <div class="circle-deco"></div>
-        <h3 class="fw-bold mb-1">
-            <i class="fa-solid fa-clock-rotate-left me-2"></i>
-            Riwayat Absensi
-        </h3>
-        <p class="mb-0 opacity-75">
-            Semua aktivitas absensi sesuai hak akses Anda.
-        </p>
+    <!-- HEADER -->
+    <div class="hero-box">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h3 class="fw-bold mb-1">
+                    <i class="fa-solid fa-clock-rotate-left me-2"></i>Riwayat Absensi
+                </h3>
+                <div class="opacity-75">Semua aktivitas absensi sesuai hak akses Anda.</div>
+            </div>
+
+            <div>
+                <select id="filterRange" class="filter-select">
+                    <option value="today">Hari Ini</option>
+                    <option value="yesterday">Kemarin</option>
+                    <option value="week">Minggu Ini</option>
+                    <option value="month">Bulan Ini</option>
+                    <option value="all">Semua Waktu</option>
+                </select>
+            </div>
+        </div>
     </div>
 
-    <div class="pro-card animate__animated animate__fadeInUp">
-        <div class="d-flex justify-content-between mb-3">
-            <h5 class="fw-bold mb-0">
-                <i class="fa-solid fa-list-check text-primary me-2"></i>
-                Data Riwayat Absensi
-            </h5>
+    <!-- STATISTIK -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-2 col-6">
+            <div class="stat-box">
+                <h3 id="statHadir">0</h3>
+                <div class="stat-label">Hadir</div>
+            </div>
         </div>
 
-        <div class="table-responsive">
+        <div class="col-md-2 col-6">
+            <div class="stat-box">
+                <h3 id="statTerlambat">0</h3>
+                <div class="stat-label">Terlambat</div>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-6">
+            <div class="stat-box">
+                <h3 id="statIzin">0</h3>
+                <div class="stat-label">Izin</div>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-6">
+            <div class="stat-box">
+                <h3 id="statSakit">0</h3>
+                <div class="stat-label">Sakit</div>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-6">
+            <div class="stat-box">
+                <h3 id="statPulang">0</h3>
+                <div class="stat-label">Pulang Awal</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TABEL RIWAYAT -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
             <table id="tableRiwayat" class="table table-striped table-bordered w-100">
-                <thead class="bg-light">
+                <thead>
                     <tr>
                         <th>Tanggal</th>
                         <th>Nama</th>
@@ -82,6 +132,7 @@
                 </thead>
                 <tbody></tbody>
             </table>
+
         </div>
     </div>
 
@@ -90,14 +141,47 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    let table;
 
-        $('#tableRiwayat').DataTable({
+    function loadRiwayat(filter = "today") {
+        if (table) table.destroy();
+
+        table = $('#tableRiwayat').DataTable({
             ajax: {
                 url: "<?= base_url('absensi/riwayatAjax') ?>",
-                dataSrc: 'data'
+                data: {
+                    filter: filter
+                },
+                dataSrc: function(json) {
+
+                    // HITUNG STATISTIK
+                    let hadir = 0,
+                        terlambat = 0,
+                        izin = 0,
+                        sakit = 0,
+                        pulang = 0;
+
+                    json.data.forEach(r => {
+                        let st = r.status.toLowerCase();
+
+                        if (["masuk", "hadir"].includes(st)) hadir++;
+                        else if (st === "terlambat") terlambat++;
+                        else if (st === "izin") izin++;
+                        else if (st === "sakit") sakit++;
+                        else if (["pulang", "pulang_awal"].includes(st)) pulang++;
+                    });
+
+                    $("#statHadir").text(hadir);
+                    $("#statTerlambat").text(terlambat);
+                    $("#statIzin").text(izin);
+                    $("#statSakit").text(sakit);
+                    $("#statPulang").text(pulang);
+
+                    return json.data;
+                }
             },
 
             columns: [{
@@ -105,43 +189,30 @@
                     render: d => new Date(d).toLocaleString('id-ID')
                 },
                 {
-                    data: 'nama' // Mengambil dari kunci 'nama' di JSON
+                    data: 'nama'
+                },
+                {
+                    data: 'tipe',
+                    render: t => `<span class="badge bg-dark text-white">${t}</span>`
+                },
+                {
+                    data: 'kelas'
                 },
 
                 {
-                    data: 'role',
-                    render: role =>
-                        role === 'siswa' ?
-                        `<span class="badge bg-primary bg-opacity-10 text-primary">Siswa</span>` : `<span class="badge bg-dark text-white">Guru</span>`
-                },
-
-                {
-                    data: 'kelas', // Mengambil dari kunci 'kelas' di JSON
-                    defaultContent: '-'
-                },
-
-                {
-                    data: 'status',
-                    render: function(status) {
-
-                        let color = "secondary";
-                        if (status === "masuk") color = "success";
-                        if (status === "terlambat") color = "warning";
-                        if (status === "izin") color = "info";
-                        if (status === "sakit") color = "primary";
-                        if (status === "pulang_awal") color = "danger";
-
-                        return `<span class="badge-status bg-${color}-subtle text-${color}">${status.toUpperCase()}</span>`;
+                    data: null,
+                    render: function(row) {
+                        return `<span class="badge-status bg-${row.status_color}-subtle text-${row.status_color}">
+                                ${row.status.toUpperCase()}
+                            </span>`;
                     }
                 },
 
                 {
-                    data: 'jam_masuk',
-                    defaultContent: '-'
+                    data: 'jam_masuk'
                 },
                 {
-                    data: 'jam_pulang',
-                    defaultContent: '-'
+                    data: 'jam_pulang'
                 }
             ],
 
@@ -150,7 +221,6 @@
             order: [
                 [0, "desc"]
             ],
-
             language: {
                 emptyTable: "Tidak ada data.",
                 lengthMenu: "Tampilkan _MENU_ data",
@@ -161,10 +231,18 @@
                     next: ">"
                 }
             }
+        });
+    }
 
+    $(document).ready(function() {
+
+        loadRiwayat();
+
+        $("#filterRange").change(function() {
+            loadRiwayat($(this).val());
         });
 
     });
 </script>
 
-<?= $this->endSection(); ?>
+<?= $this->endSection() ?>
