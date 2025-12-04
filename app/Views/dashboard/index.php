@@ -491,33 +491,40 @@ if (!empty($foto) && file_exists($path)) {
 
 <div class="container-fluid py-3 py-md-4 px-2 px-md-4">
 
-    <!-- 1. HEADER & WELCOME SECTION - ENHANCED MOBILE -->
+    <!-- FINAL COMBINED HERO + MONITORING ABSENSI - COMPACT VERSION -->
     <div class="row mb-3 mb-md-4">
         <div class="col-12">
-            <div class="pro-hero-card position-relative overflow-hidden p-3 p-md-5 animate__animated animate__fadeInDown">
+
+            <div class="pro-hero-card position-relative overflow-hidden p-3 p-md-4 animate__animated animate__fadeInDown">
+
+                <!-- DECOR -->
                 <div class="hero-deco-circle hero-deco-1"></div>
                 <div class="hero-deco-circle hero-deco-2"></div>
                 <div class="hero-deco-blur"></div>
 
+                <!-- FLEX WRAPPER -->
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <!-- LEFT: PROFILE -->
+
+                    <!-- LEFT PROFILE -->
                     <div class="d-flex align-items-center gap-3 w-100">
                         <div class="position-relative flex-shrink-0">
-                            <img src="<?= $fotoUrl ?>"
-                                class="hero-avatar shadow-lg"
-                                alt="Profile">
+                            <img src="<?= $fotoUrl ?>" class="hero-avatar shadow-lg" alt="Profile">
                             <span class="hero-online-indicator"></span>
                         </div>
+
                         <div class="flex-grow-1 min-w-0">
+
                             <h2 class="mb-1 hero-title text-truncate">
                                 Selamat Datang, <?= esc(session('nama') ?? 'Administrator') ?>!
                             </h2>
 
-                            <p class="mb-0 hero-subtitle">
-                                <span class="live-indicator"></span> Sistem monitoring real-time aktivitas sekolah
-                            </p>
+                            <!-- 🔥 CLOCK -->
+                            <div id="liveClockDisplay"
+                                class="text-warning fw-semibold mb-1"
+                                style="font-size: 14px; letter-spacing: .4px;">
+                                Memuat waktu...
+                            </div>
 
-                            <!-- IT Helpdesk WA -->
                             <a href="https://wa.me/6285712345678?text=Halo%20IT%20Helpdesk,%20saya%20butuh%20bantuan%20terkait%20sistem."
                                 class="it-helpdesk-link d-block text-truncate"
                                 target="_blank">
@@ -526,8 +533,8 @@ if (!empty($foto) && file_exists($path)) {
                         </div>
                     </div>
 
-                    <!-- RIGHT: STATISTICS - MOBILE FRIENDLY -->
-                    <div class="d-none d-md-flex gap-4 text-center mt-3 mt-md-0">
+                    <!-- DESKTOP STATS -->
+                    <div class="d-none d-md-flex gap-4 text-center mt-2 mt-md-0">
                         <div class="hero-stat-box">
                             <h4 class="hero-stat-number"><?= $jumlahSiswa ?? 0 ?></h4>
                             <small class="hero-stat-label">Siswa</small>
@@ -559,220 +566,154 @@ if (!empty($foto) && file_exists($path)) {
                             <small class="text-white-50">Kelas</small>
                         </div>
                     </div>
+
                 </div>
+
+                <!-- MONITORING ABSENSI -->
+                <div class="mt-3 p-3 p-md-3 rounded-4 absensi-box">
+
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-2 mb-md-0">
+                            <h5 class="fw-bold mb-1">
+                                <i class="fa-solid fa-qrcode me-2"></i> Monitoring Absensi Real-time
+                            </h5>
+                            <p class="mb-0 opacity-75 d-none d-md-block">
+                                Pantau kehadiran siswa dan guru melalui sistem QR Code
+                            </p>
+                        </div>
+
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex flex-column flex-sm-row gap-1 gap-md-2 justify-content-md-end">
+                                <a href="<?= base_url('absensi/scan-camera') ?>"
+                                    class="btn btn-light btn-sm rounded-pill px-3 fw-bold">
+                                    <i class="fa-solid fa-camera me-1"></i> Scan
+                                </a>
+
+                                <a href="<?= base_url('absensi/generate') ?>"
+                                    class="btn btn-outline-light btn-sm rounded-pill px-3 fw-bold">
+                                    <i class="fa-solid fa-qrcode me-1"></i> Generate
+                                </a>
+
+                                <a href="<?= base_url('absensi/riwayat') ?>"
+                                    class="btn btn-outline-light btn-sm rounded-pill px-3 fw-bold">
+                                    <i class="fa-solid fa-history me-1"></i> Riwayat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
     </div>
+
 
     <!-- EXTRA CSS FOR PREMIUM HEADER -->
     <style>
         .pro-hero-card {
             background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            border-radius: 16px;
+            border-radius: 14px;
             position: relative;
             color: #fff;
-            box-shadow: 0 15px 40px -10px rgba(67, 97, 238, .35);
+            box-shadow: 0 12px 32px -10px rgba(67, 97, 238, .32);
         }
 
         .hero-deco-circle {
             position: absolute;
             border-radius: 50%;
-            opacity: 0.25;
-            filter: blur(1px);
+            opacity: 0.22;
+            filter: blur(0.5px);
         }
 
         .hero-deco-1 {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             background: #4cc9f0;
-            top: -20px;
-            right: -20px;
+            top: -15px;
+            right: -15px;
         }
 
         .hero-deco-2 {
-            width: 100px;
-            height: 100px;
+            width: 75px;
+            height: 75px;
             background: #f72585;
-            bottom: -15px;
-            left: -15px;
+            bottom: -10px;
+            left: -10px;
         }
 
         .hero-deco-blur {
             position: absolute;
             inset: 0;
-            backdrop-filter: blur(40px);
-            opacity: .15;
+            backdrop-filter: blur(28px);
+            opacity: .14;
             z-index: 0;
         }
 
         .hero-avatar {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 14px;
-            border: 3px solid rgba(255, 255, 255, 0.35);
-            position: relative;
-            z-index: 2;
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
         .hero-online-indicator {
             position: absolute;
             bottom: 2px;
             right: 2px;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: #32d657;
             border: 2px solid #fff;
             border-radius: 50%;
-            z-index: 3;
         }
 
         .hero-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .absensi-box {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+        }
+
+        /* stat */
+        .hero-stat-number {
             font-size: 1.2rem;
             font-weight: 700;
         }
 
-        .hero-subtitle {
-            font-size: 0.85rem;
-            color: #e2e8f0;
-        }
-
-        .hero-stat-box h4 {
-            margin-bottom: 0;
-        }
-
-        .hero-stat-number {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
         .hero-stat-label {
-            text-transform: uppercase;
-            opacity: 0.7;
             font-size: 0.7rem;
-            letter-spacing: 0.5px;
+            opacity: .75;
+            letter-spacing: .4px;
         }
 
-        .hero-divider {
-            opacity: .5;
-            height: 40px;
-            align-self: center;
-        }
-
-        .min-w-0 {
-            min-width: 0;
-        }
-
-        /* Warna selaras gradasi header */
+        /* HELP DESK */
         .it-helpdesk-link {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: rgba(255, 255, 255, 0.85);
-            font-weight: 500;
-            text-decoration: none;
-            transition: 0.2s;
-            margin-top: 2px;
         }
 
-        .it-helpdesk-link i {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* Hover lembut */
         .it-helpdesk-link:hover {
-            color: #ffffff;
-            transform: translateX(3px);
-            text-decoration: underline;
+            color: #fff;
         }
 
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 1.1rem;
-            }
-
-            .hero-avatar {
-                width: 50px;
-                height: 50px;
-                border-radius: 10px;
-            }
-
-            .hero-stat-number {
-                font-size: 1.1rem;
-            }
-
-            .hero-subtitle {
-                font-size: 0.8rem;
-            }
-
-            .it-helpdesk-link {
-                font-size: 0.75rem;
-            }
-
-            .pro-hero-card {
-                border-radius: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
             .hero-title {
                 font-size: 1rem;
             }
 
             .hero-avatar {
-                width: 45px;
-                height: 45px;
-            }
-
-            .pro-hero-card {
-                padding: 1.25rem !important;
-                border-radius: 12px;
-            }
-
-            .hero-subtitle {
-                font-size: 0.75rem;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .hero-title {
-                font-size: 0.9rem;
-            }
-
-            .hero-avatar {
-                width: 40px;
-                height: 40px;
+                width: 47px;
+                height: 47px;
             }
         }
     </style>
 
-    <!-- 2. ABSENSI HIGHLIGHT SECTION - ENHANCED MOBILE -->
-    <div class="row mb-3 mb-md-4">
-        <div class="col-12">
-            <div class="attendance-highlight">
-                <div class="row align-items-center">
-                    <div class="col-md-8 mb-2 mb-md-0">
-                        <h3 class="fw-bold mb-1 mb-md-2"><i class="fa-solid fa-qrcode me-2"></i>Monitoring Absensi Real-time</h3>
-                        <p class="mb-0 opacity-75 d-none d-md-block">Pantau kehadiran siswa dan guru secara langsung dengan sistem QR Code</p>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <div class="d-flex flex-column flex-sm-row flex-wrap gap-1 gap-md-2 justify-content-md-end">
-                            <a href="<?= base_url('absensi/scan-camera') ?>" class="btn btn-light btn-sm rounded-pill px-3 fw-bold">
-                                <i class="fa-solid fa-camera me-1"></i> <span class="d-none d-sm-inline">Scan QR</span>
-                                <span class="d-inline d-sm-none">Scan</span>
-                            </a>
-                            <a href="<?= base_url('absensi/generate') ?>" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-bold">
-                                <i class="fa-solid fa-qrcode me-1"></i> <span class="d-none d-sm-inline">Generate QR</span>
-                                <span class="d-inline d-sm-none">Generate</span>
-                            </a>
-                            <a href="<?= base_url('absensi/riwayat') ?>" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-bold">
-                                <i class="fa-solid fa-history me-1"></i> <span class="d-none d-sm-inline">Riwayat</span>
-                                <span class="d-inline d-sm-none">History</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- 3. QUICK STATS GRID - ABSENSI FOCUSED -->
     <div class="row mb-3 mb-md-4">
@@ -860,7 +801,57 @@ if (!empty($foto) && file_exists($path)) {
             </div>
         </div>
     </div>
+    <style>
+        /* =============================
+   QUICK STATS RESPONSIVE FIX
+============================= */
 
+        /* WRAPPER GRID */
+        .quick-stats-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(5, 1fr);
+            /* Desktop */
+        }
+
+        /* STAT CARD */
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        /* --- TABLET (≤ 992px) → 3 kolom --- */
+        @media (max-width: 992px) {
+            .quick-stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* --- HP ANDROID NORMAL (≤ 768px) → 2 kolom --- */
+        @media (max-width: 768px) {
+            .quick-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .stat-number {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* --- HP KECIL (≤ 360px) → 1 kolom --- */
+        @media (max-width: 360px) {
+            .quick-stats-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
     <!-- 5. MAIN DASHBOARD CONTENT -->
     <div class="dashboard-grid">
 
@@ -1428,6 +1419,33 @@ if (!empty($foto) && file_exists($path)) {
         });
 
     });
+</script>
+<script>
+    function updateClockHero() {
+        const el = document.getElementById("liveClockDisplay");
+        if (!el) return;
+
+        const now = new Date();
+
+        const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+        const d = dayNames[now.getDay()];
+        const date = now.getDate();
+        const m = monthNames[now.getMonth()];
+        const y = now.getFullYear();
+
+        const h = now.getHours().toString().padStart(2, "0");
+        const mn = now.getMinutes().toString().padStart(2, "0");
+        const s = now.getSeconds().toString().padStart(2, "0");
+
+        // Nice formatting
+        el.textContent = `${d}, ${date} ${m} ${y} — ${h}:${mn}:${s}`;
+    }
+
+    // Update every second
+    setInterval(updateClockHero, 1000);
+    updateClockHero();
 </script>
 
 <?= $this->endSection(); ?>

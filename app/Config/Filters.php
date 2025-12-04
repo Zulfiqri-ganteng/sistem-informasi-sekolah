@@ -39,6 +39,7 @@ class Filters extends BaseFilters
         'admin' => \App\Filters\RoleFilter::class,
         'absensiRole' => \App\Filters\AbsensiRoleFilter::class,
         'activityLogger' => \App\Filters\ActivityLogger::class,
+        'errorLogger' => \App\Filters\ErrorLogger::class,
 
     ];
 
@@ -48,9 +49,12 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             'removeindex',
+
             // 'csrf', // aktifkan CSRF global
         ],
-        'after' => [],
+        'after' => [
+            'errorLogger'
+        ]
     ];
 
     /**

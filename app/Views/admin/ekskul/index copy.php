@@ -3,397 +3,192 @@
 <?= $this->section('head') ?>
 <!-- Tambahkan CSS SweetAlert2 & DataTables jika belum ada di layout main -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<!-- Tambahkan CSS untuk tooltips dan animasi premium -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<!-- Bootstrap Tooltips memerlukan Popper.js jika belum ada -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <style>
+
     /* ===========================
-   EKSUL UI PREMIUM-PROMAX ULTRA MAX RESPONSIVE
-   CLEAN – MODERN – INTERACTIVE – PROFESSIONAL – BUG-FREE – RESPONSIVE
+   EKSUL UI PREMIUM-PROMAX
+   CLEAN – MODERN – INTERACTIVE
 =========================== */
 
     :root {
         --primary: #2d5be3;
-        --primary-hover: #1a47d1;
         --primary-soft: #e7edff;
-        --danger: #dc3545;
         --danger-soft: #ffe7e7;
-        --warning: #ffc107;
         --warning-soft: #fff4db;
-        --success: #28a745;
         --success-soft: #e8f7e1;
         --dark: #2a2d3e;
         --text-muted: #6c757d;
-        --background: #f4f6f9;
-        --white: #ffffff;
-        --shadow-light: rgba(0, 0, 0, 0.05);
-        --shadow-medium: rgba(0, 0, 0, 0.1);
-        --border-radius: 16px;
-        --transition: all 0.3s ease;
-    }
-
-    body {
-        background: var(--background);
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     /* ---------- HEADER CARDS ---------- */
     .info-box-modern {
-        border-radius: var(--border-radius);
-        padding: 20px;
+        border-radius: 16px;
+        padding: 16px;
         display: flex;
         align-items: center;
-        background: var(--white);
-        box-shadow: 0 8px 24px var(--shadow-light);
-        margin-bottom: 24px;
-        transition: var(--transition);
-        cursor: pointer;
-    }
-
-    .info-box-modern:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px var(--shadow-medium);
+        background: #fff;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        margin-bottom: 20px;
     }
 
     .info-box-modern .icon-wrapper {
-        width: 64px;
-        height: 64px;
+        width: 60px;
+        height: 60px;
         border-radius: 12px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2rem;
-        margin-right: 16px;
-        background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary) 100%);
-        color: var(--white);
-        flex-shrink: 0;
+        font-size: 1.7rem;
+        margin-right: 15px;
     }
 
     .info-box-modern h3 {
         margin: 0;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         font-weight: 700;
     }
 
     /* ---------- SCHEDULE CHIP ---------- */
     .schedule-chip {
-        padding: 14px;
+        padding: 12px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
         background: var(--primary-soft);
         border-left: 4px solid var(--primary);
         border-radius: 12px;
-        margin-bottom: 12px;
-        transition: var(--transition);
+        margin-bottom: 10px;
+        transition: all .2s ease-in-out;
     }
 
     .schedule-chip:hover {
-        transform: translateX(8px);
-        background: #d8e2ff;
-        box-shadow: 0 4px 12px var(--shadow-light);
+        transform: translateX(6px);
+        background: #dfe6ff;
     }
 
     .schedule-chip span {
         font-weight: 600;
         color: var(--dark);
-        flex: 1;
     }
 
     /* Action buttons inside chip */
     .schedule-actions .btn-icon {
         border: none;
         background: none;
-        font-size: 1.2rem;
-        transition: var(--transition);
-        cursor: pointer;
-        padding: 4px;
-    }
-
-    .schedule-actions .btn-icon:hover {
-        transform: scale(1.1);
+        font-size: 1.1rem;
     }
 
     /* ---------- TABLE DESIGN ---------- */
     .table-modern thead {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-        color: var(--white);
+        background: var(--primary);
+        color: #fff;
     }
 
     .table-modern thead th {
-        padding: 16px;
+        padding: 14px;
         border: none;
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
-    .table-modern tbody tr {
-        transition: var(--transition);
+        font-size: .9rem;
     }
 
     .table-modern tbody tr:hover {
-        background: #f0f4ff;
-        box-shadow: 0 2px 8px var(--shadow-light);
+        background: #f5f7ff;
     }
 
     .table-modern td {
-        padding: 16px !important;
-        vertical-align: middle;
+        padding: 14px !important;
     }
 
     /* ---------- ACTION BUTTONS ---------- */
-    .action-group {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-    }
-
     .action-group .btn {
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px var(--shadow-light);
-        transition: var(--transition);
-        cursor: pointer;
-    }
-
-    .action-group .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px var(--shadow-medium);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
     }
 
     /* ---------- CARD WRAPPER ---------- */
     .card-modern {
         border: none;
-        border-radius: var(--border-radius);
-        box-shadow: 0 10px 28px var(--shadow-light);
-        overflow: hidden;
+        border-radius: 18px;
+        box-shadow: 0 7px 20px rgba(0, 0, 0, 0.06);
     }
 
     /* ---------- MODAL PREMIUM ---------- */
     .modal-content {
-        border-radius: var(--border-radius);
+        border-radius: 18px;
         border: none;
-        box-shadow: 0 12px 32px var(--shadow-medium);
     }
 
     .modal-header {
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-        padding: 20px;
-    }
-
-    .modal-body {
-        padding: 24px;
+        border-radius: 18px 18px 0 0;
     }
 
     .modal-body input,
     .modal-body select,
     .modal-body textarea {
         border-radius: 12px !important;
-        border: 1px solid #dee2e6;
-        padding: 12px;
-        transition: var(--transition);
     }
 
-    .modal-body input:focus,
-    .modal-body select:focus,
-    .modal-body textarea:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.2rem rgba(45, 91, 227, 0.25);
-    }
-
-    /* ---------- INPUT GROUP PREMIUM ---------- */
-    .input-group-prepend .input-group-text {
-        border-radius: 12px 0 0 12px;
-        background: var(--white);
-    }
-
-    /* ---------- ALERT IN MODAL ---------- */
-    .alert-light {
-        background: var(--primary-soft);
-        border-left: 4px solid var(--primary);
-        border-radius: 8px;
-    }
-
-    /* ---------- LOADING SPINNER ---------- */
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.8);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 1050;
-    }
-
-    .spinner-border {
-        width: 3rem;
-        height: 3rem;
-    }
-
-    /* ---------- RESPONSIVE IMPROVEMENTS ---------- */
-    @media (max-width: 1200px) {
-        .table-modern td {
-            padding: 12px !important;
-        }
-    }
-
-    @media (max-width: 992px) {
-        .info-box-modern {
-            margin-bottom: 16px;
-        }
-
-        .card-body {
-            padding: 16px;
-        }
-    }
-
+    /* ---------- MOBILE FIX ---------- */
     @media (max-width: 768px) {
-        .info-box-modern {
-            padding: 16px;
-            flex-direction: column;
-            text-align: center;
-        }
 
-        .info-box-modern .icon-wrapper {
-            margin-right: 0;
-            margin-bottom: 12px;
+        .info-box-modern {
+            padding: 12px;
         }
 
         .schedule-chip {
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
-            padding: 12px;
         }
 
         .schedule-actions {
+            margin-top: 6px;
             width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
+            text-align: right;
         }
 
         .action-group {
-            justify-content: center;
+            flex-direction: row;
         }
 
         .action-group .btn {
-            width: 36px;
-            height: 36px;
+            width: 32px !important;
+            height: 32px !important;
         }
 
-        .container-fluid {
-            padding-left: 12px;
-            padding-right: 12px;
+        /* Full width & reduced padding */
+        .container,
+        .container-fluid,
+        .row,
+        .col,
+        main {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
-
-        .modal-dialog {
-            margin: 1rem;
-            max-width: 95%;
-        }
-
-        .modal-body {
-            padding: 16px;
-        }
-
-        .table-modern thead th {
-            padding: 12px;
-            font-size: 0.9rem;
-        }
-
-        .table-modern td {
-            padding: 12px !important;
-            font-size: 0.9rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        h1 {
-            font-size: 1.5rem;
-        }
-
-        .btn-tambah-ekskul {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-
-        .action-group {
-            gap: 4px;
-        }
-
-        .action-group .btn {
-            width: 32px;
-            height: 32px;
-        }
-
-        .schedule-chip span {
-            font-size: 0.9rem;
-        }
-    }
-
-    /* ---------- ANIMATIONS ---------- */
-    .animate__animated {
-        animation-duration: 0.5s;
-    }
-
-    /* ---------- TOOLTIP STYLES ---------- */
-    .tooltip-inner {
-        background-color: var(--dark);
-        color: var(--white);
-        border-radius: 8px;
-        padding: 8px 12px;
-    }
-
-    .bs-tooltip-top .arrow::before {
-        border-top-color: var(--dark);
-    }
-
-    /* ---------- SELECT2 RESPONSIVE ---------- */
-    .select2-container {
-        width: 100% !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-        border-radius: 12px;
-        height: 46px;
-        padding: 10px;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 26px;
     }
 </style>
 
-<!-- Loading Overlay -->
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
 
-<div class="content-wrapper" style="background-color: var(--background);">
+<div class="content-wrapper" style="background-color: #f4f6f9;">
     <!-- Header with White Background -->
     <div class="content-header bg-white shadow-sm mb-4" style="border-bottom: 1px solid #dee2e6;">
         <div class="container-fluid">
-            <div class="row py-3 align-items-center">
+            <div class="row py-2 align-items-center">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark" style="font-weight: 700; font-size: 1.9rem;">
+                    <h1 class="m-0 text-dark" style="font-weight: 700; font-size: 1.8rem;">
                         <i class="fas fa-running text-primary mr-2"></i>Manajemen Ekskul
                     </h1>
-                    <p class="text-muted mb-0 mt-1" style="font-size: 1rem;">Platform kontrol kegiatan ekstrakurikuler sekolah yang premium, interaktif, dan profesional.</p>
+                    <p class="text-muted mb-0 mt-1" style="font-size: 0.95rem;">Platform kontrol kegiatan ekstrakurikuler sekolah.</p>
                 </div>
+                <!-- <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0">
+                        <li class="breadcrumb-item"><a href="<?= base_url('admin') ?>" class="text-primary font-weight-bold">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Ekstrakurikuler</li>
+                    </ol>
+                </div> -->
             </div>
         </div>
     </div>
@@ -402,8 +197,9 @@
     <section class="content">
         <div class="container-fluid">
 
-            <!-- STATS WIDGETS -->
+            <!-- STATS WIDGETS (Penambahan Baru untuk Visual Dashboard) -->
             <?php
+            // Hitung Statistik Sederhana
             $totalEkskul = count($ekskulList ?? []);
             $totalPembimbing = count($pembimbingList ?? []);
             $totalJadwal = 0;
@@ -413,58 +209,58 @@
             ?>
             <div class="row mb-4">
                 <div class="col-md-4 col-sm-6 col-12">
-                    <div class="info-box-modern animate__animated animate__fadeIn" data-toggle="tooltip" title="Jumlah total cabang ekstrakurikuler yang terdaftar.">
-                        <div class="icon-wrapper">
+                    <div class="info-box-modern">
+                        <div class="icon-wrapper bg-primary-soft text-primary">
                             <i class="fas fa-graduation-cap"></i>
                         </div>
                         <div class="content-wrapper">
-                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">Total Ekskul</span>
+                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Total Ekskul</span>
                             <h3 class="font-weight-bold mb-0 text-dark"><?= $totalEkskul ?> <small class="text-muted" style="font-size: 1rem;">Cabang</small></h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
-                    <div class="info-box-modern animate__animated animate__fadeIn" style="animation-delay: 0.2s;" data-toggle="tooltip" title="Jumlah guru pembimbing yang tersedia.">
-                        <div class="icon-wrapper" style="background: linear-gradient(135deg, var(--success-soft) 0%, var(--success) 100%);">
+                    <div class="info-box-modern">
+                        <div class="icon-wrapper bg-success-soft text-success">
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="content-wrapper">
-                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">Pembimbing</span>
+                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Pembimbing</span>
                             <h3 class="font-weight-bold mb-0 text-dark"><?= $totalPembimbing ?> <small class="text-muted" style="font-size: 1rem;">Guru</small></h3>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 col-12">
-                    <div class="info-box-modern animate__animated animate__fadeIn" style="animation-delay: 0.4s;" data-toggle="tooltip" title="Total sesi jadwal aktif per minggu.">
-                        <div class="icon-wrapper" style="background: linear-gradient(135deg, var(--warning-soft) 0%, var(--warning) 100%);">
+                <div class="col-md-4 col-sm-12 col-12">
+                    <div class="info-box-modern">
+                        <div class="icon-wrapper bg-warning-soft text-warning">
                             <i class="fas fa-calendar-check"></i>
                         </div>
                         <div class="content-wrapper">
-                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">Jadwal Aktif</span>
+                            <span class="text-muted font-weight-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Jadwal Aktif</span>
                             <h3 class="font-weight-bold mb-0 text-dark"><?= $totalJadwal ?> <small class="text-muted" style="font-size: 1rem;">Sesi/Minggu</small></h3>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Flashdata SweetAlert Handling -->
+            <!-- Flashdata SweetAlert Handling (Hidden div for JS to pick up) -->
             <div id="flash-success" data-msg="<?= session()->getFlashdata('success') ?>"></div>
             <div id="flash-error" data-msg="<?= session()->getFlashdata('error') ?>"></div>
 
-            <div class="card card-modern animate__animated animate__fadeInUp">
-                <div class="card-header bg-white pt-4 pb-3 border-bottom d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="mb-2 mb-md-0">
-                        <h3 class="card-title font-weight-bold text-dark" style="font-size: 1.3rem;">
+            <div class="card card-modern">
+                <div class="card-header bg-white pt-4 pb-3 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="card-title font-weight-bold text-dark" style="font-size: 1.25rem;">
                             <i class="fas fa-list-alt text-primary mr-2"></i>Daftar Ekstrakurikuler
                         </h3>
-                        <p class="text-muted small mb-0 ml-4 pl-1">Kelola data dan jadwal latihan dengan mudah, aman, dan profesional.</p>
+                        <p class="text-muted small mb-0 ml-4 pl-1">Kelola data dan jadwal latihan di sini.</p>
                     </div>
-                    <button type="button" class="btn btn-primary shadow-sm btn-tambah-ekskul px-4 rounded-pill" data-toggle="tooltip" title="Tambahkan ekstrakurikuler baru ke sistem.">
+                    <button type="button" class="btn btn-primary shadow-sm btn-tambah-ekskul px-4 rounded-pill">
                         <i class="fas fa-plus mr-1"></i> Tambah Baru
                     </button>
                 </div>
 
-                <div class="card-body p-4">
+                <div class="card-body">
                     <!-- Deteksi Error Validasi untuk Membuka Modal -->
                     <?php
                     $validation_errors = session()->getFlashdata('validation_errors');
@@ -492,7 +288,7 @@
                                     <tr>
                                         <td class="text-center font-weight-bold text-muted"><?= $no++ ?></td>
                                         <td>
-                                            <span class="font-weight-bold text-dark" style="font-size: 1.1rem;"><?= esc($ekskul['nama_ekskul']) ?></span>
+                                            <span class="font-weight-bold text-dark" style="font-size: 1.05rem;"><?= esc($ekskul['nama_ekskul']) ?></span>
                                             <?php if (!empty($ekskul['keterangan'])): ?>
                                                 <br>
                                                 <small class="text-muted">
@@ -501,7 +297,7 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center p-2 rounded bg-light" style="width: fit-content; box-shadow: 0 2px 4px var(--shadow-light);">
+                                            <div class="d-flex align-items-center p-2 rounded bg-light" style="width: fit-content;">
                                                 <div class="mr-2 text-primary">
                                                     <i class="fas fa-user-circle fa-lg"></i>
                                                 </div>
@@ -513,7 +309,7 @@
                                                 <?php foreach ($ekskul['jadwal'] as $jadwal) :
                                                     $jadwal_id = $jadwal['jadwal_id'] ?? $jadwal['id'] ?? null;
                                                 ?>
-                                                    <div class="schedule-chip animate__animated animate__fadeIn">
+                                                    <div class="schedule-chip">
                                                         <span>
                                                             <i class="far fa-calendar-alt mr-1"></i>
                                                             <strong><?= esc($jadwal['hari']) ?></strong>
@@ -527,12 +323,12 @@
                                                                 data-hari-index="<?= $jadwal['hari_index'] ?? '' ?>"
                                                                 data-jam-mulai="<?= date('H:i', strtotime($jadwal['jam_mulai'])) ?>"
                                                                 data-jam-selesai="<?= date('H:i', strtotime($jadwal['jam_selesai'])) ?>"
-                                                                data-toggle="tooltip" title="Edit jadwal ini.">
+                                                                title="Edit Jadwal">
                                                                 <i class="fas fa-pencil-alt"></i>
                                                             </button>
                                                             <button type="button" class="btn-icon text-danger btn-delete-jadwal"
                                                                 data-url="<?= base_url('ekskul/deleteJadwal/' . $jadwal_id) ?>"
-                                                                data-toggle="tooltip" title="Hapus jadwal ini.">
+                                                                title="Hapus Jadwal">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </div>
@@ -543,10 +339,9 @@
                                             <?php endif; ?>
 
                                             <button type="button" class="btn btn-xs btn-outline-primary mt-2 btn-tambah-jadwal-trigger rounded-pill px-3 py-1"
-                                                style="font-size: 0.8rem; transition: var(--transition);"
+                                                style="font-size: 0.75rem;"
                                                 data-ekskul-id="<?= $ekskul['id'] ?>"
-                                                data-ekskul-nama="<?= esc($ekskul['nama_ekskul']) ?>"
-                                                data-toggle="tooltip" title="Tambahkan jadwal baru untuk ekskul ini.">
+                                                data-ekskul-nama="<?= esc($ekskul['nama_ekskul']) ?>">
                                                 <i class="fas fa-plus mr-1"></i> Jadwal
                                             </button>
                                         </td>
@@ -556,27 +351,30 @@
                                                 <!-- Tombol Anggota Ekskul -->
                                                 <a href="<?= smart_url('ekskul/anggota/' . $ekskul['id']) ?>"
                                                     class="btn btn-sm btn-warning shadow-sm rounded-circle"
-                                                    data-toggle="tooltip" title="Kelola anggota ekskul ini.">
+                                                    style="width: 32px; height: 32px; padding: 0; line-height: 32px;"
+                                                    title="Kelola Anggota Ekskul">
                                                     <i class="fas fa-users"></i>
                                                 </a>
 
                                                 <!-- Tombol Edit -->
                                                 <button type="button"
                                                     class="btn btn-sm btn-info btn-edit shadow-sm rounded-circle"
+                                                    style="width: 32px; height: 32px; padding: 0; line-height: 32px;"
                                                     data-id="<?= $ekskul['id'] ?>"
                                                     data-nama="<?= esc($ekskul['nama_ekskul']) ?>"
                                                     data-pembimbing="<?= esc($ekskul['pembimbing_id']) ?>"
                                                     data-keterangan="<?= esc($ekskul['keterangan']) ?>"
-                                                    data-toggle="tooltip" title="Edit data ekskul ini.">
+                                                    title="Edit Data Ekskul">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
 
                                                 <!-- Tombol Delete -->
                                                 <button type="button"
                                                     class="btn btn-sm btn-danger btn-delete-ekskul shadow-sm rounded-circle"
+                                                    style="width: 32px; height: 32px; padding: 0; line-height: 32px;"
                                                     data-url="<?= base_url('ekskul/delete/' . $ekskul['id']) ?>"
                                                     data-nama="<?= esc($ekskul['nama_ekskul']) ?>"
-                                                    data-toggle="tooltip" title="Hapus data ekskul ini (konfirmasi diperlukan).">
+                                                    title="Hapus Data Ekskul">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
 
@@ -595,16 +393,16 @@
 </div>
 
 <!-- Modal Tambah/Edit Ekskul (Desain Modern) -->
-<div class="modal fade" id="modalTambahEkskul" tabindex="-1" role="dialog" aria-labelledby="modalTambahEkskulLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content animate__animated animate__zoomIn">
+<div class="modal fade" id="modalTambahEkskul" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title font-weight-bold" id="modalTambahEkskulLabel">Form Ekstrakurikuler</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('ekskul/save') ?>" method="post" id="formEkskul" novalidate>
+            <form action="<?= base_url('ekskul/save') ?>" method="post" id="formEkskul">
                 <div class="modal-body p-4">
                     <?= csrf_field() ?>
                     <input type="hidden" name="id" id="ekskulId">
@@ -617,7 +415,6 @@
                             </div>
                             <input type="text" class="form-control border-left-0" id="nama_ekskul" name="nama_ekskul"
                                 placeholder="Misal: Basket, Tari, Coding" value="<?= old('nama_ekskul') ?>" required>
-                            <div class="invalid-feedback"></div>
                         </div>
                     </div>
 
@@ -631,7 +428,6 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="form-group">
@@ -640,7 +436,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary shadow-sm" data-dismiss="modal" id="btnBatalEkskul">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary shadow-sm" id="btnSaveEkskul"><i class="fas fa-save mr-1"></i> Simpan Data</button>
                 </div>
             </form>
@@ -649,16 +445,16 @@
 </div>
 
 <!-- Modal Tambah/Edit Jadwal (Desain Modern) -->
-<div class="modal fade" id="modalTambahJadwal" tabindex="-1" role="dialog" aria-labelledby="modalTambahJadwalLabel" aria-hidden="true">
+<div class="modal fade" id="modalTambahJadwal" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-        <div class="modal-content animate__animated animate__zoomIn">
+        <div class="modal-content border-top-success">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title font-weight-bold" id="modalTambahJadwalLabel">Kelola Jadwal</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('ekskul/saveJadwal') ?>" method="post" id="formJadwal" novalidate>
+            <form action="<?= base_url('ekskul/saveJadwal') ?>" method="post" id="formJadwal">
                 <div class="modal-body p-4">
                     <div class="alert alert-light border-left-success border-0 shadow-sm mb-3">
                         <small class="text-muted d-block">Menambahkan jadwal untuk:</small>
@@ -670,7 +466,7 @@
                     <input type="hidden" name="id" id="jadwalId">
 
                     <div class="form-group">
-                        <label class="font-weight-bold">Hari <span class="text-danger">*</span></label>
+                        <label class="font-weight-bold">Hari</label>
                         <select class="form-control" id="hari" name="hari_index" required>
                             <option value="">Pilih Hari...</option>
                             <?php $days = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
@@ -678,28 +474,25 @@
                                 <option value="<?= $index ?>"><?= $day ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="font-weight-bold small">Mulai <span class="text-danger">*</span></label>
+                                <label class="font-weight-bold small">Mulai</label>
                                 <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
-                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="font-weight-bold small">Selesai <span class="text-danger">*</span></label>
+                                <label class="font-weight-bold small">Selesai</label>
                                 <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
-                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-light justify-content-between">
-                    <button type="button" class="btn btn-secondary btn-sm shadow-sm" data-dismiss="modal" id="btnBatalJadwal">Batal</button>
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-success btn-sm shadow-sm" id="btnSaveJadwal"><i class="fas fa-check mr-1"></i> Simpan</button>
                 </div>
             </form>
@@ -712,71 +505,33 @@
 <?= $this->section('scripts') ?>
 <!-- Script SweetAlert2 & DataTables -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function() {
-        // --- 0. INISIALISASI TOOLTIPS --- //
-        $('[data-toggle="tooltip"]').tooltip({
-            placement: 'top',
-            animation: true,
-            delay: {
-                show: 100,
-                hide: 100
-            }
-        });
-
         // --- 1. INISIALISASI & KONFIGURASI --- //
 
-        // Select2 dengan tema premium
+        // Select2
         $('.select2').select2({
             dropdownParent: $('#modalTambahEkskul'),
             theme: 'bootstrap4',
-            placeholder: 'Pilih opsi',
-            dropdownCssClass: 'select2-dropdown-premium',
-            width: '100%'
+            placeholder: 'Pilih opsi'
         });
 
-        // DataTables Responsive dengan language Indonesian manual (hindari CORS)
+        // DataTables Responsive
         const table = $('#ekskulTable').DataTable({
             "responsive": true,
             "autoWidth": false,
             "language": {
-                "emptyTable": "Tidak ada data tersedia dalam tabel",
-                "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
-                "infoEmpty": "Menampilkan 0 hingga 0 dari 0 entri",
-                "infoFiltered": "(disaring dari _MAX_ total entri)",
-                "infoThousands": ".",
-                "lengthMenu": "Tampilkan _MENU_ entri",
-                "loadingRecords": "Memuat...",
-                "processing": "Memproses...",
-                "search": "Cari:",
-                "zeroRecords": "Tidak ditemukan data yang sesuai",
-                "paginate": {
-                    "first": "Pertama",
-                    "last": "Terakhir",
-                    "next": "Selanjutnya",
-                    "previous": "Sebelumnya"
-                },
-                "aria": {
-                    "sortAscending": ": aktifkan untuk mengurutkan kolom naik",
-                    "sortDescending": ": aktifkan untuk mengurutkan kolom turun"
-                }
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
             },
             "columnDefs": [{
-                "orderable": false,
-                "targets": [3, 4]
-            }],
+                    "orderable": false,
+                    "targets": [3, 4]
+                } // Nonaktifkan sort di kolom Jadwal & Aksi
+            ],
             "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            "pagingType": "simple_numbers",
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "Semua"]
-            ],
-            "pageLength": 10,
-            "order": [
-                [1, 'asc']
-            ]
         });
 
         // --- 2. NOTIFIKASI OTOMATIS (SWEETALERT) --- //
@@ -792,9 +547,7 @@
                 timer: 3000,
                 showConfirmButton: false,
                 toast: true,
-                position: 'top-end',
-                background: '#e8f7e1',
-                iconColor: '#28a745'
+                position: 'top-end'
             });
         }
 
@@ -803,40 +556,20 @@
                 icon: 'error',
                 title: 'Gagal',
                 text: flashError,
-                background: '#ffe7e7',
-                iconColor: '#dc3545'
             });
         }
 
-        // --- VALIDASI & MODAL AUTO-OPEN --- //
+        // Cek Error Validasi untuk Membuka Modal Kembali
         const validationEl = $('#validation-check');
         if (validationEl.data('has-error')) {
             const targetModal = validationEl.data('modal-target');
-            setTimeout(() => {
-                $(targetModal).modal('show');
-            }, 500);
 
-            // Tampilkan error field
-            <?php if (isset($validation)) : ?>
-                const errors = <?= json_encode($validation->getErrors()) ?>;
-                $.each(errors, function(field, message) {
-                    const $input = $(`[name="${field}"]`);
-                    $input.addClass('is-invalid');
-                    const $feedback = $input.next('.invalid-feedback');
-                    if ($feedback.length) {
-                        $feedback.text(message);
-                    } else {
-                        $input.after(`<div class="invalid-feedback d-block">${message}</div>`);
-                    }
-                });
-            <?php endif; ?>
-
-            // Isi ulang data untuk Jadwal
+            // Isi ulang data khusus untuk Jadwal jika validasi gagal
             const oldEkskulId = '<?= old('ekskul_id') ?>';
             if (targetModal === '#modalTambahJadwal' && oldEkskulId) {
                 $('#jadwalEkskulId').val(oldEkskulId);
                 const oldJadwalId = '<?= old('id') ?>';
-                if (oldJadwalId) {
+                if (oldJadwalId) { // Jika mode edit
                     $('#jadwalId').val(oldJadwalId);
                     $('#modalTambahJadwalLabel').text('Edit Jadwal (Koreksi)');
                 }
@@ -845,56 +578,33 @@
                 $('#jam_mulai').val('<?= old('jam_mulai') ?>');
                 $('#jam_selesai').val('<?= old('jam_selesai') ?>');
             }
+
+            $(targetModal).modal('show');
+
+            // Tampilkan error field dengan class is-invalid
+            <?php if (isset($validation)) : ?>
+                const errors = <?= json_encode($validation->getErrors()) ?>;
+                $.each(errors, function(field, message) {
+                    $(`[name="${field}"]`).addClass('is-invalid');
+                    // Opsional: tambahkan pesan di bawah input
+                    // $(`[name="${field}"]`).after(`<div class="invalid-feedback">${message}</div>`);
+                });
+            <?php endif; ?>
         }
 
-        // --- FORM VALIDATION CLIENT-SIDE --- //
-        $('#formEkskul, #formJadwal').on('submit', function(e) {
-            const $form = $(this);
-            if (!$form[0].checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
-                $form.addClass('was-validated');
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Lengkapi Form!',
-                    text: 'Mohon isi semua field yang diwajibkan.',
-                    toast: true,
-                    position: 'top-end'
-                });
-                return false;
-            }
-            showLoading();
-        });
+        // --- 3. LOGIKA EKSKUL (MASTER) --- //
 
-        // Validasi waktu real-time
-        $('#jam_mulai, #jam_selesai').on('change', function() {
-            const mulai = $('#jam_mulai').val();
-            const selesai = $('#jam_selesai').val();
-            const $selesai = $('#jam_selesai');
-            const $feedback = $selesai.next('.invalid-feedback');
-            if (mulai && selesai && mulai >= selesai) {
-                $selesai.addClass('is-invalid');
-                if ($feedback.length) {
-                    $feedback.text('Waktu selesai harus setelah mulai.');
-                } else {
-                    $selesai.after('<div class="invalid-feedback d-block">Waktu selesai harus setelah mulai.</div>');
-                }
-            } else {
-                $selesai.removeClass('is-invalid');
-                $selesai.next('.invalid-feedback').remove();
-            }
-        });
-
-        // --- 3. LOGIKA EKSKUL --- //
+        // Tambah Ekskul
         $('.btn-tambah-ekskul').on('click', function() {
             $('#modalTambahEkskulLabel').text('Tambah Ekstrakurikuler Baru');
             $('#formEkskul')[0].reset();
             $('#ekskulId').val('');
             $('#pembimbing_id').val('').trigger('change');
-            clearValidation();
+            $('.is-invalid').removeClass('is-invalid'); // Bersihkan error
             $('#modalTambahEkskul').modal('show');
         });
 
+        // Edit Ekskul
         $(document).on('click', '.btn-edit', function() {
             const id = $(this).data('id');
             const nama = $(this).data('nama');
@@ -906,10 +616,12 @@
             $('#nama_ekskul').val(nama);
             $('#keterangan').val(keterangan);
             $('#pembimbing_id').val(pembimbingId).trigger('change');
-            clearValidation();
+            $('.is-invalid').removeClass('is-invalid');
+
             $('#modalTambahEkskul').modal('show');
         });
 
+        // Hapus Ekskul dengan SweetAlert
         $(document).on('click', '.btn-delete-ekskul', function() {
             const url = $(this).data('url');
             const nama = $(this).data('nama');
@@ -922,18 +634,17 @@
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                background: '#ffe7e7',
-                iconColor: '#dc3545'
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    showLoading();
                     window.location.href = url;
                 }
             });
         });
 
         // --- 4. LOGIKA JADWAL --- //
+
+        // Tambah Jadwal
         $(document).on('click', '.btn-tambah-jadwal-trigger', function() {
             const ekskulId = $(this).data('ekskul-id');
             const ekskulNama = $(this).data('ekskul-nama');
@@ -941,17 +652,20 @@
             $('#modalTambahJadwalLabel').text('Tambah Jadwal');
             $('#formJadwal')[0].reset();
             $('#jadwalEkskulId').val(ekskulId);
-            $('#jadwalId').val('');
+            $('#jadwalId').val(''); // Kosongkan ID jadwal
             $('#jadwalEkskulNama').text(ekskulNama);
-            clearValidation();
+            $('.is-invalid').removeClass('is-invalid');
+
             $('#modalTambahJadwal').modal('show');
         });
 
+        // Edit Jadwal
         $(document).on('click', '.btn-edit-jadwal', function() {
             const ekskulId = $(this).data('ekskul-id');
             const jadwalId = $(this).data('jadwal-id');
             const ekskulNama = $(this).data('ekskul-nama');
 
+            // Isi data
             $('#modalTambahJadwalLabel').text('Perbarui Jadwal');
             $('#jadwalEkskulId').val(ekskulId);
             $('#jadwalId').val(jadwalId);
@@ -961,10 +675,11 @@
             $('#jam_mulai').val($(this).data('jam-mulai'));
             $('#jam_selesai').val($(this).data('jam-selesai'));
 
-            clearValidation();
+            $('.is-invalid').removeClass('is-invalid');
             $('#modalTambahJadwal').modal('show');
         });
 
+        // Hapus Jadwal dengan SweetAlert
         $(document).on('click', '.btn-delete-jadwal', function() {
             const url = $(this).data('url');
 
@@ -976,44 +691,12 @@
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, Hapus',
-                cancelButtonText: 'Batal',
-                background: '#ffe7e7',
-                iconColor: '#dc3545'
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    showLoading();
                     window.location.href = url;
                 }
             });
-        });
-
-        // Perbaikan Tombol Batal
-        $('#btnBatalEkskul, #btnBatalJadwal').on('click', function() {
-            clearValidation();
-            $(this).closest('.modal').modal('hide');
-        });
-
-        // Modal hidden event: reset form
-        $('#modalTambahEkskul, #modalTambahJadwal').on('hidden.bs.modal', function() {
-            clearValidation();
-            $(this).find('form')[0].reset();
-        });
-
-        // Fungsi clear validation
-        function clearValidation() {
-            $('.is-invalid').removeClass('is-invalid');
-            $('.invalid-feedback').remove();
-            $('form').removeClass('was-validated');
-        }
-
-        // Fungsi Show Loading
-        function showLoading() {
-            $('#loadingOverlay').fadeIn(200);
-        }
-
-        // Hide loading on page unload (optional)
-        $(window).on('beforeunload', function() {
-            $('#loadingOverlay').fadeOut(200);
         });
     });
 </script>

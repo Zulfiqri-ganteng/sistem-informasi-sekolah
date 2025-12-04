@@ -767,6 +767,112 @@ $isAbsensiActive = strpos($currentUri, 'absensi') !== false;
                     transparent);
             animation: shimmer 2s infinite;
         }
+
+
+        /* =====================================
+   GLOBAL MOBILE WIDTH FIX
+===================================== */
+        /* ==========================
+   RESPONSIVE WIDTH FINAL FIX
+   — FULL WIDTH FOR MOBILE —
+============================ */
+        @media (max-width: 768px) {
+
+            /* Kurangi padding global halaman */
+            main {
+                padding: 0.8rem !important;
+            }
+
+            /* Pastikan semua grid/card melebar penuh */
+            .content-card,
+            .dashboard-header-card,
+            .dashboard-absensi-section,
+            .pro-card,
+            .quick-stats-grid,
+            .wallet-card,
+            .stat-card,
+            .dashboard-grid>div,
+            .main-content-column,
+            .sidebar-column {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* FIX PALING PENTING — hilangkan batas lebar container */
+            .container,
+            .container-fluid {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Hilangkan overflow tersembunyi yang bikin sempit */
+            body,
+            html,
+            main,
+            #mainContent {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            /* Card yang biasanya punya max-width bawaan */
+            .dashboard-header-card,
+            .dashboard-absensi-section,
+            .quick-stats-grid {
+                max-width: 100% !important;
+            }
+
+            /* Fix spacing antar elemen */
+            .row>[class*='col'] {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            /* ===== FIX UTAMA TAMBAHAN =====
+       Atasi pembungkus yang masih membatasi lebar (430px / max-width) */
+            .main-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Wrapper dashboard / content */
+            .dashboard-container,
+            .dashboard-wrapper,
+            .dashboard-content,
+            .dashboard-main,
+            .dashboard-section {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            /* Semua elemen direct child dari mainContent */
+            #mainContent>div {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+
+            /* Bar putih tempat card-card melekat */
+            .content-wrapper,
+            .page-wrapper,
+            .content-area {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
     </style>
 </head>
 
@@ -1340,6 +1446,7 @@ $isAbsensiActive = strpos($currentUri, 'absensi') !== false;
             }
         });
     </script>
+
 
     <?= $this->renderSection('scripts') ?>
 

@@ -6,10 +6,20 @@ use CodeIgniter\Model;
 
 class ErrorLogModel extends Model
 {
-    protected $table = 'error_log';
+    protected $table = 'error_logs';
     protected $primaryKey = 'id';
+
     protected $allowedFields = [
-        'level', 'message', 'context', 
-        'file', 'line', 'created_at'
+        'level',
+        'message',
+        'file',
+        'line',
+        'url',
+        'user_id',
+        'user_role',
+        'ip_address',
+        'user_agent',
     ];
+
+    protected $useTimestamps = true;
 }

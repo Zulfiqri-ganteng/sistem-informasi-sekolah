@@ -23,7 +23,8 @@ $routes->get('activity/export', 'ActivityLogs::exportCsv', ['filter' => 'auth'])
 // ADMIN GROUP
 // =======================
 $routes->group('admin', ['filter' => ['auth', 'activityLogger']], static function ($routes) {
-
+    $routes->get('error-log', 'Admin\ErrorLogController::index');
+    $routes->get('error-log/(:num)', 'Admin\ErrorLogController::detail/$1');
     $routes->get('profil', 'Admin::profil');
     $routes->post('update-profil', 'Admin::updateProfil');
 
