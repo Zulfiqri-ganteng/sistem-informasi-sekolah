@@ -3,8 +3,6 @@
 namespace Config;
 
 /**
- * Paths
- *
  * Holds the paths that are used by the system to
  * locate the main directories, app, system, etc.
  *
@@ -23,7 +21,7 @@ class Paths
      * This must contain the name of your "system" folder. Include
      * the path if the folder is not in the same directory as this file.
      */
-    public string $systemDirectory = __DIR__ . '/../../vendor/codeigniter4/framework/system';
+    public string $systemDirectory = __DIR__ . '/../../system';
 
     /**
      * ---------------------------------------------------------------
@@ -32,8 +30,8 @@ class Paths
      *
      * If you want this front controller to use a different "app"
      * folder than the default one you can set its name here. The folder
-     * can also be renamed or relocated anywhere on your server. If
-     * you do, use a full server path.
+     * can also be renamed or relocated anywhere on your server. If you do,
+     * use an absolute (full) server path.
      *
      * @see http://codeigniter.com/user_guide/general/managing_apps.html
      */
@@ -68,8 +66,8 @@ class Paths
      *
      * This variable must contain the name of the directory that
      * contains the view files used by your application. By
-     * default this is in `app/Views`. This value
-     * is used when no value is provided to `Services::renderer()`.
+     * default this is in `app/Views`. This value is used when
+     * the view is loaded by the class `\CodeIgniter\View\View`.
      */
     public string $viewDirectory = __DIR__ . '/../Views';
 }
